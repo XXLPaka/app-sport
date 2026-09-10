@@ -96,6 +96,20 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
 .lrow input{flex:1; min-width:0; padding:11px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); font-family:'Archivo'; font-size:18px; font-weight:800; text-align:center;}
 .lhist{font-size:12.5px; color:var(--muted); margin-top:7px; font-variant-numeric:tabular-nums;}
 .lhist b{color:var(--ink);}
+.lrow.reps{margin-top:8px;}
+.lrow .unit{font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:var(--muted); font-weight:800; width:44px; flex:none;}
+.notebox{background:var(--card); border:1px solid var(--line); border-radius:11px; padding:10px 14px; margin-bottom:10px;}
+.notetoggle{width:100%; padding:11px; border:1px dashed var(--line); border-radius:10px; background:var(--paper); color:var(--muted); font-family:'Archivo'; font-weight:800; font-size:13.5px; letter-spacing:0.4px; cursor:pointer;}
+.notetoggle.on{border-style:solid; border-color:var(--gym); color:var(--gym-fg); background:var(--gym-bg);}
+.notebody{margin-top:10px;}
+.nrow{display:flex; align-items:center; gap:10px; margin-bottom:8px;}
+.nrow label{font-size:12.5px; color:var(--muted); font-weight:700; flex:1;}
+.nrow input{width:74px; padding:9px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); font-family:'Archivo'; font-size:16px; font-weight:800; text-align:center;}
+.notebody textarea{width:100%; min-height:64px; padding:10px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); font-family:'Archivo'; font-size:14px; resize:vertical;}
+.nprev{font-size:12.5px; color:var(--muted); margin-top:7px; line-height:1.45;}
+.nprev b{color:var(--ink);}
+.sessnote{margin-top:12px; text-align:left;}
+.sessnote textarea{width:100%; min-height:70px; padding:10px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); font-family:'Archivo'; font-size:14px;}
 .savebox{margin-top:22px; border-top:1px solid var(--line); padding-top:14px;}
 .savebox h3{font-family:'Anton',sans-serif; font-weight:400; font-size:15px; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;}
 .savebox textarea{width:100%; min-height:70px; padding:10px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); font-family:'Archivo'; font-size:13px; margin:6px 0;}
@@ -113,10 +127,12 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
   <div id="store-warn" class="warnbar hidden">Dans cet affichage, tes charges ne seront pas conservées à la fermeture. Pour les garder : ouvre cette app dans le navigateur de ton téléphone (fichier téléchargé ou hébergé) et ajoute-la à l'écran d'accueil.</div>
   <div id="install-hint" class="warnbar hidden" style="background:var(--gym-bg); color:var(--gym-fg);">Installe l'app sur ton écran d'accueil : Android → menu ⋮ → « Installer l'application » · iPhone → Partager → « Sur l'écran d'accueil ».</div>
   <div id="home-list"></div>
-  <p class="hint">Tes charges se notent dans chaque exo pendant la séance et réapparaissent la fois suivante.</p>
+  <p class="hint">Charge, reps, douleur et commentaire se notent dans chaque exo pendant la séance, et réapparaissent la fois suivante.</p>
   <div class="savebox">
-    <h3>Sauvegarde des charges</h3>
-    <button id="exp-btn">Copier mes charges (texte)</button>
+    <h3>Point coach</h3>
+    <button id="rep-btn">Copier le point coach (à coller dans la conversation)</button>
+    <h3 style="margin-top:16px;">Sauvegarde complète</h3>
+    <button id="exp-btn">Copier ma sauvegarde (charges, reps, notes)</button>
     <textarea id="imp-area" placeholder="Colle ici une sauvegarde pour la restaurer (changement de téléphone ou d'affichage)"></textarea>
     <button id="imp-btn">Restaurer</button>
     <p class="msg" id="save-msg"></p>
@@ -138,8 +154,17 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
   <div class="presc"><span id="p-presc"></span><div class="cue" id="p-cue"></div></div>
   <div class="loadbox hidden" id="loadbox">
     <div class="lt">Charge du jour</div>
-    <div class="lrow"><button id="ld-minus">−2,5</button><input type="number" step="0.5" inputmode="decimal" id="ld-val" placeholder="kg"><button id="ld-plus">+2,5</button></div>
+    <div class="lrow"><span class="unit">kg</span><button id="ld-minus">−2,5</button><input type="number" step="0.5" inputmode="decimal" id="ld-val" placeholder="kg"><button id="ld-plus">+2,5</button></div>
+    <div class="lrow reps hidden" id="reprow"><span class="unit">reps</span><button id="rp-minus">−1</button><input type="number" step="1" min="0" inputmode="numeric" id="rp-val" placeholder="reps faites"><button id="rp-plus">+1</button></div>
     <div class="lhist" id="lhist"></div>
+  </div>
+  <div class="notebox" id="notebox">
+    <button class="notetoggle" id="nt-toggle">Noter ressenti / douleur</button>
+    <div class="nprev" id="nt-prev"></div>
+    <div class="notebody hidden" id="nt-body">
+      <div class="nrow"><label for="nt-pain">Douleur pendant l'exo (0 = rien)</label><input type="number" min="0" max="10" step="1" inputmode="numeric" id="nt-pain" placeholder="/10"></div>
+      <textarea id="nt-com" placeholder="Ressenti, technique, ce qu'il faut retenir la prochaine fois…"></textarea>
+    </div>
   </div>
   <div class="howto"><svg id="svg-how" viewBox="0 0 232 126"></svg></div>
   <div class="anat">
@@ -848,7 +873,17 @@ function buildSteps(sess){
 }
 
 var STORE_KEY = "bloc2-loads";
-var storeMode = "memory", persistOK = false, loads = {}, saveTimer = null;
+var storeMode = "memory", persistOK = false, saveTimer = null;
+// v2 : loads[exo] = [{d, w charge, rs reps par série, p douleur/10, c commentaire}] · sess["date|séance"] = {note}
+var DB = {v:2, loads:{}, sess:{}};
+
+function parseDB(raw){
+  var d = null;
+  try{ d = JSON.parse(raw); }catch(e){ return null; }
+  if (!d || typeof d !== "object" || Array.isArray(d)) return null;
+  if (d.v >= 2) return {v:2, loads:d.loads || {}, sess:d.sess || {}};
+  return {v:2, loads:d, sess:{}}; // ancien format : map exo -> [{d, w}]
+}
 
 function todayStr(){ var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
 function fmtD(s){ var p = (s || "").split("-"); return p.length === 3 ? p[2] + "/" + p[1] : s; }
@@ -866,7 +901,7 @@ async function storeInit(){
       ok = !!(t && t.value);
     }catch(e){ ok = false; }
     if (ok){
-      try{ var r = await window.storage.get(STORE_KEY); loads = r && r.value ? JSON.parse(r.value) : {}; }catch(e){ loads = {}; }
+      try{ var r = await window.storage.get(STORE_KEY); DB = (r && r.value ? parseDB(r.value) : null) || DB; }catch(e){}
       storeMode = "artifact"; return;
     }
   }
@@ -876,31 +911,52 @@ async function storeInit(){
     if (ls.getItem(STORE_KEY + "-ping") === "1"){
       ls.removeItem(STORE_KEY + "-ping");
       var raw = ls.getItem(STORE_KEY);
-      loads = raw ? JSON.parse(raw) : {};
+      DB = (raw ? parseDB(raw) : null) || DB;
       storeMode = "local"; persistOK = true; return;
     }
   }catch(e){}
   storeMode = "memory";
 }
-function saveLoads(){
+function saveDB(){
   if (saveTimer) clearTimeout(saveTimer);
   saveTimer = setTimeout(function(){
-    var txt = JSON.stringify(loads);
+    var txt = JSON.stringify(DB);
     if (storeMode === "artifact"){ try{ window.storage.set(STORE_KEY, txt); }catch(e){} }
     else if (storeMode === "local"){ try{ window.localStorage.setItem(STORE_KEY, txt); }catch(e){} }
   }, 500);
 }
-function recordLoad(name, w){
-  if (w === null || w === undefined || isNaN(w)) return;
-  var arr = loads[name] || [];
+// Entrée du jour pour un exo, créée à la demande
+function todayEntry(name, create){
+  var arr = DB.loads[name] || (DB.loads[name] = []);
   var t = todayStr();
-  var i = arr.findIndex(function(x){ return x.d === t; });
-  if (i >= 0) arr[i].w = w; else arr.push({d: t, w: w});
-  arr.sort(function(a, b){ return a.d.localeCompare(b.d); });
-  loads[name] = arr.slice(-12);
-  saveLoads();
+  var it = null;
+  for (var i = arr.length - 1; i >= 0; i--){ if (arr[i].d === t){ it = arr[i]; break; } }
+  if (!it && create){
+    it = {d: t};
+    arr.push(it);
+    arr.sort(function(a, b){ return a.d.localeCompare(b.d); });
+    if (arr.length > 12) DB.loads[name] = arr.slice(-12); // aujourd'hui est la date la plus récente, jamais coupée
+  }
+  return it;
 }
-function lastLoad(name){ var a = loads[name]; return a && a.length ? a[a.length - 1] : null; }
+// k = "w" charge · "r" reps · "p" douleur · "c" commentaire
+function setField(name, k, v){
+  var blank = (v === "" || v === null || v === undefined || (typeof v === "number" && isNaN(v)));
+  var it = todayEntry(name, !blank);
+  if (!it) return;
+  if (blank) delete it[k]; else it[k] = v;
+  saveDB();
+}
+function lastLoad(name){
+  var a = DB.loads[name] || [];
+  for (var i = a.length - 1; i >= 0; i--){ if (typeof a[i].w === "number") return a[i]; }
+  return null;
+}
+function lastComment(name){
+  var a = DB.loads[name] || [], t = todayStr();
+  for (var i = a.length - 1; i >= 0; i--){ if (a[i].d !== t && a[i].c) return a[i]; }
+  return null;
+}
 function renderStoreState(){
   var el = document.getElementById("store-state"), w = document.getElementById("store-warn");
   var ih = document.getElementById("install-hint");
@@ -913,11 +969,26 @@ function renderStoreState(){
   else if (storeMode === "artifact"){ el.textContent = "Charges sauvegardées — à confirmer à la prochaine ouverture"; el.className = "stchip"; w.classList.add("hidden"); }
   else { el.textContent = "Charges non conservées ici ✗"; el.className = "stchip ko"; w.classList.remove("hidden"); }
 }
+function num(id){ return parseFloat(String(document.getElementById(id).value).replace(",", ".")); }
+function curName(){ return steps[idx] ? steps[idx].e.n : null; }
 function commitLoad(){
   var lb = document.getElementById("loadbox");
-  if (!lb || lb.classList.contains("hidden") || !steps[idx]) return;
-  var v = parseFloat(String(document.getElementById("ld-val").value).replace(",", "."));
-  if (!isNaN(v)) recordLoad(steps[idx].e.n, v);
+  if (!lb || lb.classList.contains("hidden") || !curName()) return;
+  var v = num("ld-val");
+  if (!isNaN(v)) setField(curName(), "w", v);
+  if (!document.getElementById("reprow").classList.contains("hidden")) setReps(curName(), steps[idx].set, num("rp-val"));
+}
+// reps par série : rs[0] = série 1, rs[1] = série 2…
+function setReps(name, set, v){
+  var blank = isNaN(v);
+  var it = todayEntry(name, !blank);
+  if (!it) return;
+  var rs = it.rs || [];
+  rs[set - 1] = blank ? null : Math.max(0, Math.round(v));
+  for (var i = 0; i < rs.length; i++){ if (rs[i] === undefined) rs[i] = null; }
+  while (rs.length && rs[rs.length - 1] === null) rs.pop();
+  if (rs.length) it.rs = rs; else delete it.rs;
+  saveDB();
 }
 function bumpLoad(d){
   var inp = document.getElementById("ld-val");
@@ -925,21 +996,62 @@ function bumpLoad(d){
   inp.value = Math.max(0, Math.round((v + d) * 10) / 10);
   commitLoad();
 }
+function bumpReps(d){
+  var inp = document.getElementById("rp-val");
+  var v = parseInt(inp.value, 10);
+  inp.value = Math.max(0, (isNaN(v) ? 0 : v) + d);
+  commitLoad();
+}
+function commitNote(){
+  if (!curName()) return;
+  var p = num("nt-pain");
+  setField(curName(), "p", isNaN(p) ? null : Math.min(10, Math.max(0, Math.round(p))));
+  setField(curName(), "c", document.getElementById("nt-com").value.trim());
+  document.getElementById("nt-toggle").classList.toggle("on", hasNote(todayEntry(curName(), false)));
+}
+function hasNote(it){ return !!(it && (it.c || typeof it.p === "number")); }
+function perfTxt(x){
+  var rs = (x.rs || []).map(function(n){ return n === null ? "–" : n; });
+  return (typeof x.w === "number" ? fmtW(x.w) + " kg" : "") + (rs.length ? (typeof x.w === "number" ? " × " : "") + rs.join("/") + " reps" : "");
+}
 function renderLoadBox(e){
   var showLoad = curSess.tag === "gym" && e.n !== "Échauffement";
   var lb = document.getElementById("loadbox");
   lb.classList.toggle("hidden", !showLoad);
-  if (!showLoad) return;
-  var arr = loads[e.n] || [], t = todayStr();
-  var last = arr.length ? arr[arr.length - 1] : null;
-  document.getElementById("ld-val").value = last ? last.w : "";
-  var h = document.getElementById("lhist");
-  if (!arr.length){ h.innerHTML = "Première fois" + (e.load ? " — départ conseillé : <b>" + e.load + "</b>" : ""); return; }
-  var prev = arr.filter(function(x){ return x.d !== t; }).slice(-3);
-  var today = arr.find(function(x){ return x.d === t; });
-  var txt = prev.length ? "Historique : <b>" + prev.map(function(x){ return fmtW(x.w); }).join(" → ") + " kg</b> · dern. " + fmtD(prev[prev.length - 1].d) : "";
-  if (today) txt += (txt ? " · " : "") + "aujourd'hui : <b>" + fmtW(today.w) + " kg</b>";
-  h.innerHTML = txt;
+  document.getElementById("reprow").classList.toggle("hidden", !showLoad || !!e.work);
+  var arr = DB.loads[e.n] || [], t = todayStr();
+  var today = todayEntry(e.n, false);
+  if (showLoad){
+    var last = lastLoad(e.n);
+    document.getElementById("ld-val").value = today && typeof today.w === "number" ? today.w : (last ? last.w : "");
+    // reps : série déjà notée > série précédente du jour ; la dernière séance s'affiche en placeholder (jamais pré-enregistrée)
+    var set = steps[idx] ? steps[idx].set : 1, rs = today && today.rs ? today.rs : [], prevRs = null;
+    for (var i = arr.length - 1; i >= 0; i--){ if (arr[i].d !== t && arr[i].rs){ prevRs = arr[i].rs; break; } }
+    var rp = document.getElementById("rp-val");
+    rp.value = rs[set - 1] != null ? rs[set - 1] : (set > 1 && rs[set - 2] != null ? rs[set - 2] : "");
+    rp.placeholder = prevRs && prevRs[set - 1] != null ? "dern. fois : " + prevRs[set - 1] : "reps faites";
+    var h = document.getElementById("lhist");
+    var prev = arr.filter(function(x){ return x.d !== t && typeof x.w === "number"; }).slice(-3);
+    if (!prev.length && !(today && typeof today.w === "number")){
+      h.innerHTML = "Première fois" + (e.load ? " — départ conseillé : <b>" + e.load + "</b>" : "");
+    } else {
+      var txt = prev.length ? "Historique : <b>" + prev.map(perfTxt).join(" → ") + "</b> · dern. " + fmtD(prev[prev.length - 1].d) : "";
+      if (today && typeof today.w === "number") txt += (txt ? " · " : "") + "aujourd'hui : <b>" + perfTxt(today) + "</b>";
+      h.innerHTML = txt;
+    }
+  }
+  // Note : visible sur tous les exos, dépliée d'office si déjà remplie aujourd'hui
+  var noted = hasNote(today);
+  document.getElementById("nt-pain").value = today && typeof today.p === "number" ? today.p : "";
+  document.getElementById("nt-com").value = today && today.c ? today.c : "";
+  document.getElementById("nt-body").classList.toggle("hidden", !noted);
+  document.getElementById("nt-toggle").classList.toggle("on", noted);
+  // rappel de la dernière note, visible sans déplier
+  var lc = lastComment(e.n);
+  document.getElementById("nt-prev").innerHTML = lc ? "Dernière note (" + fmtD(lc.d) + (typeof lc.p === "number" ? " · douleur " + lc.p + "/10" : "") + ") : <b>" + escapeHtml(lc.c) + "</b>" : "";
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(ch){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]; });
 }
 
 var curSess = null, steps = [], idx = 0;
@@ -1090,12 +1202,21 @@ function nextStep(){
   clearT();
   if (idx >= steps.length - 1){
     document.getElementById("p-prog").style.width = "100%";
-    var t0 = todayStr(), parts = [];
+    var parts = [], seen = {};
     curSess.blocks.forEach(function(b){ b.exos.forEach(function(e){
-      var a = loads[e.n];
-      if (a && a.length && a[a.length - 1].d === t0 && parts.indexOf(e.n) < 0) parts.push(e.n.split(" (")[0] + " " + fmtW(a[a.length - 1].w));
+      var it = todayEntry(e.n, false);
+      if (it && (typeof it.w === "number" || it.rs) && !seen[e.n]){ seen[e.n] = 1; parts.push(e.n.split(" (")[0] + " " + perfTxt(it)); }
     }); });
-    document.getElementById("p-done").innerHTML = '<div class="donecard">Séance terminée. Bien joué.' + (parts.length ? "<br><span style=\"font-size:13px; font-weight:600;\">Charges du jour : " + parts.join(" · ") + "</span>" : "") + '</div>';
+    var sk = todayStr() + "|" + curSess.name;
+    document.getElementById("p-done").innerHTML = '<div class="donecard">Séance terminée. Bien joué.' + (parts.length ? "<br><span style=\"font-size:13px; font-weight:600;\">Perfs du jour : " + escapeHtml(parts.join(" · ")) + "</span>" : "") +
+      '<div class="sessnote"><textarea id="sess-note" placeholder="Bilan de la séance : énergie, douleurs (dos, quad, poignet, adducteurs), sommeil…"></textarea></div></div>';
+    var sn = document.getElementById("sess-note");
+    sn.value = DB.sess[sk] && DB.sess[sk].note ? DB.sess[sk].note : "";
+    sn.addEventListener("input", function(){
+      var v = sn.value.trim();
+      if (v) DB.sess[sk] = {note: v}; else delete DB.sess[sk];
+      saveDB();
+    });
     document.getElementById("t-label").textContent = "Fini";
     document.getElementById("t-val").textContent = "✓";
     document.getElementById("t-btn").textContent = "Retour aux séances";
@@ -1131,6 +1252,12 @@ document.getElementById("p-next").onclick = function(){ clearT(); nextStep(); };
 document.getElementById("ld-val").addEventListener("input", commitLoad);
 document.getElementById("ld-minus").onclick = function(){ bumpLoad(-2.5); };
 document.getElementById("ld-plus").onclick = function(){ bumpLoad(2.5); };
+document.getElementById("rp-val").addEventListener("input", commitLoad);
+document.getElementById("rp-minus").onclick = function(){ bumpReps(-1); };
+document.getElementById("rp-plus").onclick = function(){ bumpReps(1); };
+document.getElementById("nt-toggle").onclick = function(){ document.getElementById("nt-body").classList.toggle("hidden"); };
+document.getElementById("nt-pain").addEventListener("input", commitNote);
+document.getElementById("nt-com").addEventListener("input", commitNote);
 
 function flash(id, t){ var el = document.getElementById(id); el.textContent = t; setTimeout(function(){ el.textContent = ""; }, 2500); }
 async function copyText(t, id){
@@ -1141,13 +1268,57 @@ async function copyText(t, id){
     ta.remove();
   }
 }
-document.getElementById("exp-btn").onclick = function(){ copyText(JSON.stringify(loads), "save-msg"); };
+// Fusion d'une sauvegarde : rien n'est écrasé, les données déjà sur ce téléphone gagnent à date égale
+function mergeDB(base, inc){
+  Object.keys(inc.loads).forEach(function(n){
+    var byD = {};
+    (inc.loads[n] || []).forEach(function(x){ if (x && x.d) byD[x.d] = x; });
+    (base.loads[n] || []).forEach(function(x){ if (x && x.d) byD[x.d] = Object.assign({}, byD[x.d] || {}, x); });
+    base.loads[n] = Object.keys(byD).sort().slice(-12).map(function(d){ return byD[d]; });
+  });
+  Object.keys(inc.sess).forEach(function(k){ if (!base.sess[k]) base.sess[k] = inc.sess[k]; });
+  return base;
+}
+// Résumé lisible des 28 derniers jours, à coller dans la conversation de coaching
+function coachReport(){
+  var order = {}, k = 0;
+  SESSIONS.forEach(function(s){ s.blocks.forEach(function(b){ b.exos.forEach(function(e){ if (!(e.n in order)) order[e.n] = k++; }); }); });
+  var cut = new Date(); cut.setDate(cut.getDate() - 28);
+  var cutS = cut.getFullYear() + "-" + String(cut.getMonth() + 1).padStart(2, "0") + "-" + String(cut.getDate()).padStart(2, "0");
+  var days = {};
+  function day(d){ return days[d] || (days[d] = {ex: [], notes: []}); }
+  Object.keys(DB.loads).forEach(function(n){
+    (DB.loads[n] || []).forEach(function(x){ if (x && x.d >= cutS) day(x.d).ex.push({n: n, x: x}); });
+  });
+  Object.keys(DB.sess).forEach(function(key){
+    var d = key.split("|")[0];
+    if (d >= cutS && DB.sess[key] && DB.sess[key].note) day(d).notes.push(key.slice(d.length + 1) + " : " + DB.sess[key].note);
+  });
+  var out = ["POINT COACH — Bloc 2 — export du " + fmtD(todayStr()) + " (28 derniers jours)"];
+  var ds = Object.keys(days).sort();
+  if (!ds.length) out.push("", "Aucune donnée sur la période.");
+  ds.forEach(function(d){
+    var lbl = new Date(d + "T12:00:00").toLocaleDateString("fr-FR", {weekday: "long", day: "2-digit", month: "2-digit"});
+    out.push("", "== " + lbl);
+    days[d].ex.sort(function(a, b){ return (order[a.n] === undefined ? 999 : order[a.n]) - (order[b.n] === undefined ? 999 : order[b.n]); });
+    days[d].ex.forEach(function(o){
+      var bits = [], p = perfTxt(o.x);
+      if (p) bits.push(p);
+      if (typeof o.x.p === "number") bits.push("douleur " + o.x.p + "/10");
+      out.push("- " + o.n + (bits.length ? " : " + bits.join(" · ") : "") + (o.x.c ? " — « " + o.x.c + " »" : ""));
+    });
+    days[d].notes.forEach(function(n){ out.push("> Bilan " + n); });
+  });
+  return out.join("\n");
+}
+document.getElementById("rep-btn").onclick = function(){ copyText(coachReport(), "save-msg"); };
+document.getElementById("exp-btn").onclick = function(){ copyText(JSON.stringify(DB), "save-msg"); };
 document.getElementById("imp-btn").onclick = function(){
-  try{
-    var d = JSON.parse(document.getElementById("imp-area").value);
-    if (!d || typeof d !== "object" || Array.isArray(d)) throw new Error("bad");
-    loads = d; saveLoads(); flash("save-msg", "Charges restaurées ✓");
-  }catch(e){ flash("save-msg", "Format invalide"); }
+  var d = parseDB(document.getElementById("imp-area").value);
+  if (!d){ flash("save-msg", "Format invalide"); return; }
+  DB = mergeDB(DB, d); saveDB();
+  document.getElementById("imp-area").value = "";
+  flash("save-msg", "Sauvegarde fusionnée ✓");
 };
 
 if ("serviceWorker" in navigator){ try{ navigator.serviceWorker.register("sw.js").catch(function(){}); }catch(e){} }
