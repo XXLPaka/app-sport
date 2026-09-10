@@ -1,4 +1,4 @@
-const CACHE = "bloc2-v1";
+const CACHE = "bloc2-v2";
 const CORE = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", function(e){
