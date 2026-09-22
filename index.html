@@ -14,6 +14,7 @@
 <link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 :root{
   --paper:#F6F4EE; --card:#FFFFFF; --ink:#1C201E; --muted:#5C635F; --line:#E3E0D6;
@@ -115,6 +116,11 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
 .savebox textarea{width:100%; min-height:70px; padding:10px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); font-family:'Archivo'; font-size:13px; margin:6px 0;}
 .savebox button{width:100%; margin-top:6px; padding:11px; border:1px solid var(--line); border-radius:11px; background:var(--card); color:var(--ink); font-family:'Archivo'; font-weight:700; font-size:14px; cursor:pointer;}
 .msg{font-size:13px; font-weight:700; color:var(--ok); min-height:18px; margin-top:6px;}
+.savebox input{width:100%; padding:11px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); font-family:'Archivo'; font-size:15px; margin:6px 0;}
+.savebox .sub{font-size:12.5px; color:var(--muted); margin:2px 0 8px; line-height:1.45;}
+.coachbox{background:var(--pre-bg); color:var(--pre-fg); border:1px solid var(--pre); border-radius:11px; padding:10px 14px; margin-bottom:10px; font-size:14px; line-height:1.45;}
+.coachbox .lt{font-size:11px; letter-spacing:1.2px; text-transform:uppercase; font-weight:800; margin-bottom:4px; opacity:0.85;}
+.stchip.sync{color:var(--pre-fg); border-color:var(--pre); background:var(--pre-bg);}
 </style>
 </head>
 <body>
@@ -128,6 +134,23 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
   <div id="install-hint" class="warnbar hidden" style="background:var(--gym-bg); color:var(--gym-fg);">Installe l'app sur ton écran d'accueil : Android → menu ⋮ → « Installer l'application » · iPhone → Partager → « Sur l'écran d'accueil ».</div>
   <div id="home-list"></div>
   <p class="hint">Charge, reps, douleur et commentaire se notent dans chaque exo pendant la séance, et réapparaissent la fois suivante.</p>
+  <div class="savebox" id="cloudbox">
+    <h3>Synchro avec le coach</h3>
+    <div id="cl-state" class="stchip">Vérification…</div>
+    <div id="cl-auth">
+      <p class="sub">Connecte-toi une fois : tes séances remontent toutes seules et les consignes du coach s'affichent dans les exos.</p>
+      <input type="email" id="cl-mail" placeholder="ton email" autocomplete="email" autocapitalize="off" spellcheck="false">
+      <input type="password" id="cl-pass" placeholder="mot de passe" autocomplete="current-password">
+      <button id="cl-login">Se connecter</button>
+      <button id="cl-signup">Créer mon compte (première fois)</button>
+    </div>
+    <div id="cl-on" class="hidden">
+      <p class="sub" id="cl-who"></p>
+      <button id="cl-sync">Synchroniser maintenant</button>
+      <button id="cl-logout">Se déconnecter</button>
+    </div>
+    <p class="msg" id="cl-msg"></p>
+  </div>
   <div class="savebox">
     <h3>Point coach</h3>
     <button id="rep-btn">Copier le point coach (à coller dans la conversation)</button>
@@ -152,6 +175,7 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
   <div class="pname" id="p-name"></div>
   <div class="pset" id="p-set"></div>
   <div class="presc"><span id="p-presc"></span><div class="cue" id="p-cue"></div></div>
+  <div class="coachbox hidden" id="coachbox"></div>
   <div class="loadbox hidden" id="loadbox">
     <div class="lt">Charge du jour</div>
     <div class="lrow"><span class="unit">kg</span><button id="ld-minus">−2,5</button><input type="number" step="0.5" inputmode="decimal" id="ld-val" placeholder="kg"><button id="ld-plus">+2,5</button></div>
@@ -881,9 +905,11 @@ function parseDB(raw){
   var d = null;
   try{ d = JSON.parse(raw); }catch(e){ return null; }
   if (!d || typeof d !== "object" || Array.isArray(d)) return null;
-  if (d.v >= 2) return {v:2, loads:d.loads || {}, sess:d.sess || {}};
-  return {v:2, loads:d, sess:{}}; // ancien format : map exo -> [{d, w}]
+  if (d.v >= 2) return {v:2, loads:d.loads || {}, sess:d.sess || {}, coach:d.coach || {}, pushedAt:d.pushedAt || 0, pulledAt:d.pulledAt || null};
+  return {v:2, loads:d, sess:{}, coach:{}, pushedAt:0, pulledAt:null}; // ancien format : map exo -> [{d, w}]
 }
+// Horodate une modification locale : c'est ce qui déclenche l'envoi vers Supabase
+function touch(it){ if (it) it.u = Date.now(); return it; }
 
 function todayStr(){ var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
 function fmtD(s){ var p = (s || "").split("-"); return p.length === 3 ? p[2] + "/" + p[1] : s; }
@@ -923,6 +949,8 @@ function saveDB(){
     var txt = JSON.stringify(DB);
     if (storeMode === "artifact"){ try{ window.storage.set(STORE_KEY, txt); }catch(e){} }
     else if (storeMode === "local"){ try{ window.localStorage.setItem(STORE_KEY, txt); }catch(e){} }
+    scheduleSync();
+    renderCloud();
   }, 500);
 }
 // Entrée du jour pour un exo, créée à la demande
@@ -945,7 +973,7 @@ function setField(name, k, v){
   var it = todayEntry(name, !blank);
   if (!it) return;
   if (blank) delete it[k]; else it[k] = v;
-  saveDB();
+  touch(it); saveDB();
 }
 function lastLoad(name){
   var a = DB.loads[name] || [];
@@ -969,6 +997,151 @@ function renderStoreState(){
   else if (storeMode === "artifact"){ el.textContent = "Charges sauvegardées — à confirmer à la prochaine ouverture"; el.className = "stchip"; w.classList.add("hidden"); }
   else { el.textContent = "Charges non conservées ici ✗"; el.className = "stchip ko"; w.classList.remove("hidden"); }
 }
+/* ─────────── Synchro Supabase ───────────
+   Le téléphone reste la source : on écrit d'abord en local (salle sans réseau),
+   puis on pousse ce qui a changé et on récupère les consignes du coach. */
+var SUPA = {
+  url: "https://casumtilzfeeuoofysgx.supabase.co",
+  key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhc3VtdGlsemZlZXVvb2Z5c2d4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNjE0MjMsImV4cCI6MjEwNTYzNzQyM30.4icsTZKPs4VcUnt0JYMtiqLz5LGSDzwq9OGzPaaZcnI"
+}; // clé publique : elle ne donne accès à rien sans connexion (RLS)
+var sb = null, cloudUser = null, syncing = false, syncSoon = null;
+
+function cloudConfigured(){ return !!(SUPA.url && SUPA.key && window.supabase); }
+async function cloudInit(){
+  if (!cloudConfigured()){ renderCloud(); return; }
+  try{
+    sb = window.supabase.createClient(SUPA.url, SUPA.key, {auth: {persistSession: true, autoRefreshToken: true}});
+    var r = await sb.auth.getSession();
+    cloudUser = r && r.data && r.data.session ? r.data.session.user : null;
+  }catch(e){ sb = null; }
+  renderCloud();
+  if (cloudUser) syncNow();
+}
+function scheduleSync(){
+  if (!sb || !cloudUser) return;
+  if (syncSoon) clearTimeout(syncSoon);
+  syncSoon = setTimeout(function(){ syncNow(true); }, 4000);
+}
+function pendingCount(){
+  var since = DB.pushedAt || 0, n = 0;
+  Object.keys(DB.loads).forEach(function(k){ (DB.loads[k] || []).forEach(function(x){ if ((x.u || 0) > since) n++; }); });
+  Object.keys(DB.sess || {}).forEach(function(k){ if ((DB.sess[k].u || 0) > since) n++; });
+  return n;
+}
+function renderCloud(){
+  var st = document.getElementById("cl-state"), auth = document.getElementById("cl-auth"), on = document.getElementById("cl-on");
+  if (!st) return;
+  auth.classList.toggle("hidden", !!cloudUser);
+  on.classList.toggle("hidden", !cloudUser);
+  if (!cloudConfigured()){ st.textContent = "Synchro pas encore branchée"; st.className = "stchip"; return; }
+  if (!cloudUser){ st.textContent = "Non connecté"; st.className = "stchip"; return; }
+  document.getElementById("cl-who").textContent = "Connecté : " + cloudUser.email;
+  var n = pendingCount();
+  if (syncing){ st.textContent = "Synchro en cours…"; st.className = "stchip sync"; }
+  else if (!navigator.onLine){ st.textContent = "Hors ligne" + (n ? " · " + n + " à envoyer" : " · tout est envoyé"); st.className = "stchip"; }
+  else if (n){ st.textContent = n + " séance(s) à envoyer"; st.className = "stchip sync"; }
+  else { st.textContent = "Synchronisé ✓"; st.className = "stchip ok"; }
+}
+async function syncNow(silent){
+  if (!sb || !cloudUser || syncing) return;
+  if (!navigator.onLine){ if (!silent) flash("cl-msg", "Pas de réseau, ce sera envoyé plus tard"); renderCloud(); return; }
+  syncing = true; renderCloud();
+  try{
+    await pushLocal();
+    await pullRemote();
+    saveDB(); renderCloud();
+    if (!silent) flash("cl-msg", "Synchronisé ✓");
+  }catch(e){
+    renderCloud();
+    flash("cl-msg", "Synchro impossible : " + (e && e.message ? e.message : "erreur"));
+  }
+  syncing = false; renderCloud();
+  if (curSess && steps[idx]) renderCoach(steps[idx].e);
+}
+async function pushLocal(){
+  // Première synchro : tout l'historique local part, même les entrées d'avant
+  // la synchro (elles n'ont pas d'horodatage).
+  var since = DB.pushedAt || 0, first = !DB.pushedAt, now = Date.now(), rows = [], notes = [];
+  Object.keys(DB.loads).forEach(function(n){
+    (DB.loads[n] || []).forEach(function(x){
+      if (!first && (x.u || 0) <= since) return;
+      rows.push({user_id: cloudUser.id, exo: n, day: x.d,
+        weight: typeof x.w === "number" ? x.w : null,
+        reps: x.rs && x.rs.length ? x.rs : null,
+        pain: typeof x.p === "number" ? x.p : null,
+        comment: x.c || null, client_at: new Date(x.u || (x.d + "T12:00:00")).toISOString()});
+    });
+  });
+  Object.keys(DB.sess || {}).forEach(function(k){
+    var s = DB.sess[k];
+    if (!first && (s.u || 0) <= since) return;
+    var d = k.split("|")[0];
+    notes.push({user_id: cloudUser.id, day: d, session: k.slice(d.length + 1), note: s.note || "", client_at: new Date(s.u || (d + "T12:00:00")).toISOString()});
+  });
+  if (rows.length){ var a = await sb.from("workout_entry").upsert(rows, {onConflict: "user_id,exo,day"}); if (a.error) throw a.error; }
+  if (notes.length){ var b = await sb.from("session_note").upsert(notes, {onConflict: "user_id,day,session"}); if (b.error) throw b.error; }
+  DB.pushedAt = now;
+}
+async function pullRemote(){
+  var since = DB.pulledAt || "1970-01-01T00:00:00Z", maxT = since;
+  var q = await sb.from("workout_entry").select("exo,day,weight,reps,pain,comment,updated_at").gt("updated_at", since).order("updated_at", {ascending: true}).limit(2000);
+  if (q.error) throw q.error;
+  (q.data || []).forEach(function(r){
+    if (r.updated_at > maxT) maxT = r.updated_at;
+    var arr = DB.loads[r.exo] || (DB.loads[r.exo] = []), it = null;
+    for (var i = arr.length - 1; i >= 0; i--){ if (arr[i].d === r.day){ it = arr[i]; break; } }
+    var srv = Date.parse(r.updated_at);
+    if (it && (it.u || 0) >= srv) return;           // le local est plus récent : on le garde
+    if (!it){ it = {d: r.day}; arr.push(it); arr.sort(function(a, b){ return a.d.localeCompare(b.d); }); }
+    if (r.weight === null) delete it.w; else it.w = r.weight;
+    if (!r.reps || !r.reps.length) delete it.rs; else it.rs = r.reps;
+    if (r.pain === null) delete it.p; else it.p = r.pain;
+    if (!r.comment) delete it.c; else it.c = r.comment;
+    it.u = srv;
+    if (arr.length > 12) DB.loads[r.exo] = arr.slice(-12);
+  });
+  var s = await sb.from("session_note").select("day,session,note,updated_at").gt("updated_at", since).limit(500);
+  if (s.error) throw s.error;
+  (s.data || []).forEach(function(r){
+    if (r.updated_at > maxT) maxT = r.updated_at;
+    var k = r.day + "|" + r.session, cur = DB.sess[k], srv = Date.parse(r.updated_at);
+    if (cur && (cur.u || 0) >= srv) return;
+    DB.sess[k] = {note: r.note || "", u: srv};
+  });
+  var c = await sb.from("coach_note").select("exo,note,updated_at").limit(500);
+  if (c.error) throw c.error;
+  DB.coach = {};
+  (c.data || []).forEach(function(r){ if (r.note) DB.coach[r.exo] = {note: r.note, at: r.updated_at}; });
+  DB.pulledAt = maxT;
+}
+function renderCoach(e){
+  var cb = document.getElementById("coachbox");
+  if (!cb) return;
+  var cn = DB.coach && DB.coach[e.n];
+  cb.classList.toggle("hidden", !cn);
+  if (cn) cb.innerHTML = '<div class="lt">Consigne du coach</div>' + escapeHtml(cn.note);
+}
+async function cloudAuth(mode){
+  if (!cloudConfigured()){ flash("cl-msg", "Synchro pas encore branchée"); return; }
+  var mail = document.getElementById("cl-mail").value.trim(), pass = document.getElementById("cl-pass").value;
+  if (!mail || !pass){ flash("cl-msg", "Email et mot de passe requis"); return; }
+  flash("cl-msg", "Connexion…");
+  var r = mode === "signup" ? await sb.auth.signUp({email: mail, password: pass}) : await sb.auth.signInWithPassword({email: mail, password: pass});
+  if (r.error){ flash("cl-msg", authMsg(r.error.message)); return; }
+  cloudUser = r.data && r.data.user ? r.data.user : null;
+  if (!cloudUser){ flash("cl-msg", "Compte créé, connecte-toi maintenant"); return; }
+  document.getElementById("cl-pass").value = "";
+  renderCloud();
+  syncNow();
+}
+function authMsg(m){
+  m = String(m || "");
+  if (/Invalid login/i.test(m)) return "Email ou mot de passe incorrect";
+  if (/already registered/i.test(m)) return "Compte déjà existant, utilise Se connecter";
+  if (/at least/i.test(m)) return "Mot de passe trop court (6 caractères minimum)";
+  if (/Failed to fetch|NetworkError/i.test(m)) return "Pas de réseau";
+  return m;
+}
 function num(id){ return parseFloat(String(document.getElementById(id).value).replace(",", ".")); }
 function curName(){ return steps[idx] ? steps[idx].e.n : null; }
 function commitLoad(){
@@ -988,7 +1161,7 @@ function setReps(name, set, v){
   for (var i = 0; i < rs.length; i++){ if (rs[i] === undefined) rs[i] = null; }
   while (rs.length && rs[rs.length - 1] === null) rs.pop();
   if (rs.length) it.rs = rs; else delete it.rs;
-  saveDB();
+  touch(it); saveDB();
 }
 function bumpLoad(d){
   var inp = document.getElementById("ld-val");
@@ -1139,6 +1312,7 @@ function renderStep(){
   document.getElementById("p-presc").innerHTML = "<b>" + e.d + "</b>" + (e.load ? " — " + e.load : "");
   document.getElementById("p-cue").textContent = e.cue || "";
   renderLoadBox(e);
+  renderCoach(e);
   renderBody(e);
   var fk = FIGMAP[e.n];
   document.getElementById("svg-how").innerHTML = fk ? figSvg(fk).replace(/__F__/g, "var(--fig)").replace(/__G__/g, "var(--fig2)") : "";
@@ -1213,8 +1387,7 @@ function nextStep(){
     var sn = document.getElementById("sess-note");
     sn.value = DB.sess[sk] && DB.sess[sk].note ? DB.sess[sk].note : "";
     sn.addEventListener("input", function(){
-      var v = sn.value.trim();
-      if (v) DB.sess[sk] = {note: v}; else delete DB.sess[sk];
+      DB.sess[sk] = {note: sn.value.trim(), u: Date.now()};
       saveDB();
     });
     document.getElementById("t-label").textContent = "Fini";
@@ -1322,10 +1495,23 @@ document.getElementById("imp-btn").onclick = function(){
 };
 
 if ("serviceWorker" in navigator){ try{ navigator.serviceWorker.register("sw.js").catch(function(){}); }catch(e){} }
+document.getElementById("cl-login").onclick = function(){ cloudAuth("login"); };
+document.getElementById("cl-signup").onclick = function(){ cloudAuth("signup"); };
+document.getElementById("cl-sync").onclick = function(){ syncNow(); };
+document.getElementById("cl-logout").onclick = async function(){
+  try{ await sb.auth.signOut(); }catch(e){}
+  cloudUser = null; renderCloud();
+  flash("cl-msg", "Déconnecté (tes séances restent sur le téléphone)");
+};
+window.addEventListener("online", function(){ renderCloud(); syncNow(true); });
+window.addEventListener("offline", renderCloud);
+document.addEventListener("visibilitychange", function(){ if (!document.hidden) syncNow(true); });
+
 (async function(){
   await storeInit();
   renderStoreState();
   renderHome();
+  cloudInit();
 })();
 </script>
 </body>

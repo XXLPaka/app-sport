@@ -1,4 +1,8 @@
-const CACHE = "bloc2-v2";
+const CACHE = "bloc2-v4";
+// Seuls ces domaines sont mis en cache hors ligne. Tout le reste (API Supabase
+// en particulier) doit passer par le reseau : une reponse d'API mise en cache
+// renverrait des donnees perimees.
+const CDN = ["https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"];
 const CORE = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", function(e){
@@ -25,8 +29,8 @@ self.addEventListener("fetch", function(e){
         return caches.match(e.request).then(function(r){ return r || caches.match("./index.html"); });
       })
     );
-  } else {
-    // polices etc. : cache d'abord, reseau sinon
+  } else if (CDN.indexOf(new URL(e.request.url).origin) >= 0) {
+    // polices et bibliotheques : cache d'abord, reseau sinon
     e.respondWith(
       caches.match(e.request).then(function(r){
         if (r) return r;
