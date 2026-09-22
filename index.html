@@ -1059,22 +1059,24 @@ async function syncNow(silent){
   if (curSess && steps[idx]) renderCoach(steps[idx].e);
 }
 async function pushLocal(){
-  var since = DB.pushedAt || 0, now = Date.now(), rows = [], notes = [];
+  // Première synchro : tout l'historique local part, même les entrées d'avant
+  // la synchro (elles n'ont pas d'horodatage).
+  var since = DB.pushedAt || 0, first = !DB.pushedAt, now = Date.now(), rows = [], notes = [];
   Object.keys(DB.loads).forEach(function(n){
     (DB.loads[n] || []).forEach(function(x){
-      if ((x.u || 0) <= since) return;
+      if (!first && (x.u || 0) <= since) return;
       rows.push({user_id: cloudUser.id, exo: n, day: x.d,
         weight: typeof x.w === "number" ? x.w : null,
         reps: x.rs && x.rs.length ? x.rs : null,
         pain: typeof x.p === "number" ? x.p : null,
-        comment: x.c || null, client_at: new Date(x.u).toISOString()});
+        comment: x.c || null, client_at: new Date(x.u || (x.d + "T12:00:00")).toISOString()});
     });
   });
   Object.keys(DB.sess || {}).forEach(function(k){
     var s = DB.sess[k];
-    if ((s.u || 0) <= since) return;
+    if (!first && (s.u || 0) <= since) return;
     var d = k.split("|")[0];
-    notes.push({user_id: cloudUser.id, day: d, session: k.slice(d.length + 1), note: s.note || "", client_at: new Date(s.u).toISOString()});
+    notes.push({user_id: cloudUser.id, day: d, session: k.slice(d.length + 1), note: s.note || "", client_at: new Date(s.u || (d + "T12:00:00")).toISOString()});
   });
   if (rows.length){ var a = await sb.from("workout_entry").upsert(rows, {onConflict: "user_id,exo,day"}); if (a.error) throw a.error; }
   if (notes.length){ var b = await sb.from("session_note").upsert(notes, {onConflict: "user_id,day,session"}); if (b.error) throw b.error; }
