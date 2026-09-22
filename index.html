@@ -1000,7 +1000,10 @@ function renderStoreState(){
 /* ─────────── Synchro Supabase ───────────
    Le téléphone reste la source : on écrit d'abord en local (salle sans réseau),
    puis on pousse ce qui a changé et on récupère les consignes du coach. */
-var SUPA = {url: "", key: ""};           // rempli à la création du projet
+var SUPA = {
+  url: "https://casumtilzfeeuoofysgx.supabase.co",
+  key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhc3VtdGlsemZlZXVvb2Z5c2d4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNjE0MjMsImV4cCI6MjEwNTYzNzQyM30.4icsTZKPs4VcUnt0JYMtiqLz5LGSDzwq9OGzPaaZcnI"
+}; // clé publique : elle ne donne accès à rien sans connexion (RLS)
 var sb = null, cloudUser = null, syncing = false, syncSoon = null;
 
 function cloudConfigured(){ return !!(SUPA.url && SUPA.key && window.supabase); }
