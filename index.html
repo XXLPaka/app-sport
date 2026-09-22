@@ -121,6 +121,11 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
 .coachbox{background:var(--pre-bg); color:var(--pre-fg); border:1px solid var(--pre); border-radius:11px; padding:10px 14px; margin-bottom:10px; font-size:14px; line-height:1.45;}
 .coachbox .lt{font-size:11px; letter-spacing:1.2px; text-transform:uppercase; font-weight:800; margin-bottom:4px; opacity:0.85;}
 .stchip.sync{color:var(--pre-fg); border-color:var(--pre); background:var(--pre-bg);}
+.ckrow{display:flex; align-items:center; gap:10px; margin:4px 0;}
+.ckrow label{font-size:13.5px; font-weight:700; flex:1;}
+.ckrow input{width:88px; flex:none; margin:0; text-align:center; font-weight:800;}
+.ckhist{font-size:12.5px; color:var(--muted); margin-top:8px; line-height:1.45; font-variant-numeric:tabular-nums;}
+.ckhist b{color:var(--ink);}
 </style>
 </head>
 <body>
@@ -134,6 +139,18 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
   <div id="install-hint" class="warnbar hidden" style="background:var(--gym-bg); color:var(--gym-fg);">Installe l'app sur ton écran d'accueil : Android → menu ⋮ → « Installer l'application » · iPhone → Partager → « Sur l'écran d'accueil ».</div>
   <div id="home-list"></div>
   <p class="hint">Charge, reps, douleur et commentaire se notent dans chaque exo pendant la séance, et réapparaissent la fois suivante.</p>
+  <div class="savebox" id="checkbox">
+    <h3>Point de la semaine</h3>
+    <div id="ck-state" class="stchip">À remplir</div>
+    <p class="sub">Lundi matin, à jeun, avant de boire ou manger. Douleurs de 0 (rien) à 10.</p>
+    <div class="ckrow"><label for="ck-wt">Poids à jeun</label><input type="number" step="0.1" inputmode="decimal" id="ck-wt" placeholder="kg"></div>
+    <div class="ckrow"><label for="ck-ad">Adducteur</label><input type="number" min="0" max="10" step="1" inputmode="numeric" id="ck-ad" placeholder="/10"></div>
+    <div class="ckrow"><label for="ck-lb">Lombaire</label><input type="number" min="0" max="10" step="1" inputmode="numeric" id="ck-lb" placeholder="/10"></div>
+    <div class="ckrow"><label for="ck-qd">Quadriceps</label><input type="number" min="0" max="10" step="1" inputmode="numeric" id="ck-qd" placeholder="/10"></div>
+    <div class="ckrow"><label for="ck-wr">Poignet</label><input type="number" min="0" max="10" step="1" inputmode="numeric" id="ck-wr" placeholder="/10"></div>
+    <textarea id="ck-note" placeholder="Remarque de la semaine (facultatif)"></textarea>
+    <div class="ckhist" id="ck-hist"></div>
+  </div>
   <div class="savebox" id="cloudbox">
     <h3>Synchro avec le coach</h3>
     <div id="cl-state" class="stchip">Vérification…</div>
@@ -899,14 +916,14 @@ function buildSteps(sess){
 var STORE_KEY = "bloc2-loads";
 var storeMode = "memory", persistOK = false, saveTimer = null;
 // v2 : loads[exo] = [{d, w charge, rs reps par série, p douleur/10, c commentaire}] · sess["date|séance"] = {note}
-var DB = {v:2, loads:{}, sess:{}};
+var DB = {v:2, loads:{}, sess:{}, check:{}, coach:{}, pushedAt:0, pulledAt:null};
 
 function parseDB(raw){
   var d = null;
   try{ d = JSON.parse(raw); }catch(e){ return null; }
   if (!d || typeof d !== "object" || Array.isArray(d)) return null;
-  if (d.v >= 2) return {v:2, loads:d.loads || {}, sess:d.sess || {}, coach:d.coach || {}, pushedAt:d.pushedAt || 0, pulledAt:d.pulledAt || null};
-  return {v:2, loads:d, sess:{}, coach:{}, pushedAt:0, pulledAt:null}; // ancien format : map exo -> [{d, w}]
+  if (d.v >= 2) return {v:2, loads:d.loads || {}, sess:d.sess || {}, check:d.check || {}, coach:d.coach || {}, pushedAt:d.pushedAt || 0, pulledAt:d.pulledAt || null};
+  return {v:2, loads:d, sess:{}, check:{}, coach:{}, pushedAt:0, pulledAt:null}; // ancien format : map exo -> [{d, w}]
 }
 // Horodate une modification locale : c'est ce qui déclenche l'envoi vers Supabase
 function touch(it){ if (it) it.u = Date.now(); return it; }
@@ -997,6 +1014,56 @@ function renderStoreState(){
   else if (storeMode === "artifact"){ el.textContent = "Charges sauvegardées — à confirmer à la prochaine ouverture"; el.className = "stchip"; w.classList.add("hidden"); }
   else { el.textContent = "Charges non conservées ici ✗"; el.className = "stchip ko"; w.classList.remove("hidden"); }
 }
+/* ─────────── Point de la semaine ───────────
+   Une ligne par semaine, rangée au lundi : rempli mardi, ça compte pour la même semaine. */
+var CK = [["wt", "ck-wt"], ["ad", "ck-ad"], ["lb", "ck-lb"], ["qd", "ck-qd"], ["wr", "ck-wr"], ["note", "ck-note"]];
+function weekKey(dt){
+  var d = dt ? new Date(dt) : new Date();
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7));   // lundi de la semaine
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function commitCheck(){
+  var k = weekKey(), c = DB.check[k] || (DB.check[k] = {});
+  CK.forEach(function(f){
+    var el = document.getElementById(f[1]);
+    if (f[0] === "note"){ var t = el.value.trim(); if (t) c.note = t; else delete c.note; return; }
+    var v = parseFloat(String(el.value).replace(",", "."));
+    if (isNaN(v)) delete c[f[0]];
+    else c[f[0]] = f[0] === "wt" ? v : Math.min(10, Math.max(0, Math.round(v)));
+  });
+  c.u = Date.now();
+  saveDB(); renderCheckState();
+}
+function ckFilled(c){ return !!(c && (typeof c.wt === "number" || typeof c.ad === "number" || typeof c.lb === "number" || typeof c.qd === "number" || typeof c.wr === "number")); }
+function ckLine(k){
+  var c = DB.check[k], b = [];
+  if (typeof c.wt === "number") b.push(fmtW(c.wt) + " kg");
+  [["ad", "add"], ["lb", "lomb"], ["qd", "quad"], ["wr", "poignet"]].forEach(function(f){
+    if (typeof c[f[0]] === "number") b.push(f[1] + " " + c[f[0]]);
+  });
+  return fmtD(k) + " : " + (b.length ? b.join(" · ") : "vide") + (c.note ? " — " + c.note : "");
+}
+function renderCheckState(){
+  var st = document.getElementById("ck-state");
+  if (!st) return;
+  var k = weekKey(), done = ckFilled(DB.check[k]);
+  st.textContent = done ? "Rempli ✓" : "À remplir";
+  st.className = "stchip" + (done ? " ok" : "");
+  var prev = Object.keys(DB.check).filter(function(x){ return x !== k && ckFilled(DB.check[x]); }).sort().slice(-3).reverse();
+  document.getElementById("ck-hist").innerHTML = prev.length
+    ? "Semaines précédentes<br>" + prev.map(function(x){ return escapeHtml(ckLine(x)); }).join("<br>")
+    : "";
+}
+function renderCheck(){
+  var k = weekKey(), c = DB.check[k] || {};
+  CK.forEach(function(f){
+    var el = document.getElementById(f[1]);
+    if (!el) return;
+    el.value = c[f[0]] === undefined ? "" : c[f[0]];
+  });
+  renderCheckState();
+}
+
 /* ─────────── Synchro Supabase ───────────
    Le téléphone reste la source : on écrit d'abord en local (salle sans réseau),
    puis on pousse ce qui a changé et on récupère les consignes du coach. */
@@ -1026,6 +1093,7 @@ function pendingCount(){
   var since = DB.pushedAt || 0, n = 0;
   Object.keys(DB.loads).forEach(function(k){ (DB.loads[k] || []).forEach(function(x){ if ((x.u || 0) > since) n++; }); });
   Object.keys(DB.sess || {}).forEach(function(k){ if ((DB.sess[k].u || 0) > since) n++; });
+  Object.keys(DB.check || {}).forEach(function(k){ if ((DB.check[k].u || 0) > since) n++; });
   return n;
 }
 function renderCloud(){
@@ -1049,7 +1117,7 @@ async function syncNow(silent){
   try{
     await pushLocal();
     await pullRemote();
-    saveDB(); renderCloud();
+    saveDB(); renderCloud(); renderCheck();
     if (!silent) flash("cl-msg", "Synchronisé ✓");
   }catch(e){
     renderCloud();
@@ -1078,8 +1146,22 @@ async function pushLocal(){
     var d = k.split("|")[0];
     notes.push({user_id: cloudUser.id, day: d, session: k.slice(d.length + 1), note: s.note || "", client_at: new Date(s.u || (d + "T12:00:00")).toISOString()});
   });
+  var checks = [];
+  Object.keys(DB.check || {}).forEach(function(k){
+    var c = DB.check[k];
+    if (!first && (c.u || 0) <= since) return;
+    if (!ckFilled(c) && !c.note) return;
+    checks.push({user_id: cloudUser.id, day: k,
+      weight: typeof c.wt === "number" ? c.wt : null,
+      adductor: typeof c.ad === "number" ? c.ad : null,
+      lumbar: typeof c.lb === "number" ? c.lb : null,
+      quad: typeof c.qd === "number" ? c.qd : null,
+      wrist: typeof c.wr === "number" ? c.wr : null,
+      note: c.note || null, client_at: new Date(c.u || (k + "T12:00:00")).toISOString()});
+  });
   if (rows.length){ var a = await sb.from("workout_entry").upsert(rows, {onConflict: "user_id,exo,day"}); if (a.error) throw a.error; }
   if (notes.length){ var b = await sb.from("session_note").upsert(notes, {onConflict: "user_id,day,session"}); if (b.error) throw b.error; }
+  if (checks.length){ var c2 = await sb.from("checkin").upsert(checks, {onConflict: "user_id,day"}); if (c2.error) throw c2.error; }
   DB.pushedAt = now;
 }
 async function pullRemote(){
@@ -1107,6 +1189,21 @@ async function pullRemote(){
     var k = r.day + "|" + r.session, cur = DB.sess[k], srv = Date.parse(r.updated_at);
     if (cur && (cur.u || 0) >= srv) return;
     DB.sess[k] = {note: r.note || "", u: srv};
+  });
+  var ck = await sb.from("checkin").select("day,weight,adductor,lumbar,quad,wrist,note,updated_at").gt("updated_at", since).limit(200);
+  if (ck.error) throw ck.error;
+  (ck.data || []).forEach(function(r){
+    if (r.updated_at > maxT) maxT = r.updated_at;
+    var cur = DB.check[r.day], srv = Date.parse(r.updated_at);
+    if (cur && (cur.u || 0) >= srv) return;
+    var o = {u: srv};
+    if (r.weight !== null) o.wt = Number(r.weight);
+    if (r.adductor !== null) o.ad = r.adductor;
+    if (r.lumbar !== null) o.lb = r.lumbar;
+    if (r.quad !== null) o.qd = r.quad;
+    if (r.wrist !== null) o.wr = r.wrist;
+    if (r.note) o.note = r.note;
+    DB.check[r.day] = o;
   });
   var c = await sb.from("coach_note").select("exo,note,updated_at").limit(500);
   if (c.error) throw c.error;
@@ -1450,6 +1547,7 @@ function mergeDB(base, inc){
     base.loads[n] = Object.keys(byD).sort().slice(-12).map(function(d){ return byD[d]; });
   });
   Object.keys(inc.sess).forEach(function(k){ if (!base.sess[k]) base.sess[k] = inc.sess[k]; });
+  Object.keys(inc.check || {}).forEach(function(k){ if (!base.check[k]) base.check[k] = inc.check[k]; });
   return base;
 }
 // Résumé lisible des 28 derniers jours, à coller dans la conversation de coaching
@@ -1468,6 +1566,8 @@ function coachReport(){
     if (d >= cutS && DB.sess[key] && DB.sess[key].note) day(d).notes.push(key.slice(d.length + 1) + " : " + DB.sess[key].note);
   });
   var out = ["POINT COACH — Bloc 2 — export du " + fmtD(todayStr()) + " (28 derniers jours)"];
+  var cks = Object.keys(DB.check || {}).filter(function(k){ return k >= cutS && ckFilled(DB.check[k]); }).sort();
+  if (cks.length){ out.push("", "POIDS ET DOULEURS (point du lundi)"); cks.forEach(function(k){ out.push("- " + ckLine(k)); }); }
   var ds = Object.keys(days).sort();
   if (!ds.length) out.push("", "Aucune donnée sur la période.");
   ds.forEach(function(d){
@@ -1495,6 +1595,7 @@ document.getElementById("imp-btn").onclick = function(){
 };
 
 if ("serviceWorker" in navigator){ try{ navigator.serviceWorker.register("sw.js").catch(function(){}); }catch(e){} }
+CK.forEach(function(f){ document.getElementById(f[1]).addEventListener("input", commitCheck); });
 document.getElementById("cl-login").onclick = function(){ cloudAuth("login"); };
 document.getElementById("cl-signup").onclick = function(){ cloudAuth("signup"); };
 document.getElementById("cl-sync").onclick = function(){ syncNow(); };
@@ -1511,6 +1612,7 @@ document.addEventListener("visibilitychange", function(){ if (!document.hidden) 
   await storeInit();
   renderStoreState();
   renderHome();
+  renderCheck();
   cloudInit();
 })();
 </script>
