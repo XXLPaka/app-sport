@@ -43,6 +43,25 @@ drop trigger if exists session_note_touch on public.session_note;
 create trigger session_note_touch before insert or update on public.session_note
   for each row execute function public.touch_updated_at();
 
+-- ── Point du lundi : poids à jeun et douleurs, une ligne par semaine ────────
+create table if not exists public.checkin (
+  user_id    uuid not null references auth.users(id) on delete cascade,
+  day        date not null,    -- lundi de la semaine concernée
+  weight     numeric,          -- poids à jeun
+  adductor   smallint,         -- douleurs /10
+  lumbar     smallint,
+  quad       smallint,
+  wrist      smallint,
+  note       text,
+  client_at  timestamptz,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, day)
+);
+create index if not exists checkin_sync_idx on public.checkin (user_id, updated_at);
+drop trigger if exists checkin_touch on public.checkin;
+create trigger checkin_touch before insert or update on public.checkin
+  for each row execute function public.touch_updated_at();
+
 -- ── Consignes du coach : écrites côté coach, lues par l'app ─────────────────
 create table if not exists public.coach_note (
   user_id    uuid not null references auth.users(id) on delete cascade,
@@ -59,7 +78,13 @@ create trigger coach_note_touch before insert or update on public.coach_note
 -- RLS seule ne suffit pas sur Supabase récent : il faut aussi les GRANT.
 alter table public.workout_entry enable row level security;
 alter table public.session_note  enable row level security;
+alter table public.checkin       enable row level security;
 alter table public.coach_note    enable row level security;
+
+drop policy if exists checkin_own on public.checkin;
+create policy checkin_own on public.checkin for all to authenticated
+  using (user_id = auth.uid()) with check (user_id = auth.uid());
+grant select, insert, update, delete on public.checkin to authenticated;
 
 drop policy if exists workout_entry_own on public.workout_entry;
 create policy workout_entry_own on public.workout_entry for all to authenticated

@@ -50,6 +50,23 @@ async function report(days = 28) {
   const cut = new Date(Date.now() - days * 864e5).toISOString().slice(0, 10);
   const rows = await rest(`workout_entry?day=gte.${cut}&select=exo,day,weight,reps,pain,comment&order=day.asc`);
   const notes = await rest(`session_note?day=gte.${cut}&select=day,session,note&order=day.asc`);
+  const cks = await rest(`checkin?day=gte.${cut}&select=day,weight,adductor,lumbar,quad,wrist,note&order=day.asc`);
+  if (cks.length) {
+    console.log("POIDS ET DOULEURS (point du lundi)");
+    for (const c of cks) {
+      const b = [];
+      if (c.weight !== null) b.push(fmtW(c.weight) + " kg");
+      for (const [k, lbl] of [["adductor", "add"], ["lumbar", "lomb"], ["quad", "quad"], ["wrist", "poignet"]])
+        if (c[k] !== null) b.push(`${lbl} ${c[k]}`);
+      console.log(`- ${fmtD(c.day)} : ${b.join(" · ") || "vide"}${c.note ? " — " + c.note : ""}`);
+    }
+    // Tendance : utile pour juger la prise de masse et les tractions.
+    const w = cks.filter((c) => c.weight !== null);
+    if (w.length > 1) {
+      const d = Number(w.at(-1).weight) - Number(w[0].weight);
+      console.log(`  → ${d >= 0 ? "+" : ""}${fmtW(d.toFixed(1))} kg sur ${w.length} pesées\n`);
+    } else console.log("");
+  }
   const byDay = new Map();
   for (const r of rows) (byDay.get(r.day) || byDay.set(r.day, { ex: [], notes: [] }).get(r.day)).ex.push(r);
   for (const n of notes) if (n.note) (byDay.get(n.day) || byDay.set(n.day, { ex: [], notes: [] }).get(n.day)).notes.push(n);
