@@ -121,6 +121,13 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
 .coachbox{background:var(--pre-bg); color:var(--pre-fg); border:1px solid var(--pre); border-radius:11px; padding:10px 14px; margin-bottom:10px; font-size:14px; line-height:1.45;}
 .coachbox .lt{font-size:11px; letter-spacing:1.2px; text-transform:uppercase; font-weight:800; margin-bottom:4px; opacity:0.85;}
 .stchip.sync{color:var(--pre-fg); border-color:var(--pre); background:var(--pre-bg);}
+.recobox{border-radius:11px; padding:10px 14px; margin-bottom:10px; font-size:14px; line-height:1.45; border:1px solid var(--line); background:var(--card);}
+.recobox .lt{font-size:11px; letter-spacing:1.2px; text-transform:uppercase; font-weight:800; margin-bottom:3px; opacity:0.8;}
+.recobox b{font-size:16px; display:block;}
+.recobox .sub2{font-size:12.5px; margin-top:4px; opacity:0.85;}
+.recobox.up{background:var(--gym-bg); color:var(--gym-fg); border-color:var(--gym);}
+.recobox.down{background:var(--warn-bg); color:var(--warn-fg); border-color:var(--warn-fg);}
+.exo .up{color:var(--ok); font-weight:800;}
 .ckrow{display:flex; align-items:center; gap:10px; margin:4px 0;}
 .ckrow label{font-size:13.5px; font-weight:700; flex:1;}
 .ckrow input{width:88px; flex:none; margin:0; text-align:center; font-weight:800;}
@@ -193,6 +200,7 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
   <div class="pset" id="p-set"></div>
   <div class="presc"><span id="p-presc"></span><div class="cue" id="p-cue"></div></div>
   <div class="coachbox hidden" id="coachbox"></div>
+  <div class="recobox hidden" id="recobox"></div>
   <div class="loadbox hidden" id="loadbox">
     <div class="lt">Charge du jour</div>
     <div class="lrow"><span class="unit">kg</span><button id="ld-minus">−2,5</button><input type="number" step="0.5" inputmode="decimal" id="ld-val" placeholder="kg"><button id="ld-plus">+2,5</button></div>
@@ -736,63 +744,60 @@ var SESSIONS = [
    {n:"Hollow body hold", d:"3 tenues de 25s", sets:3, work:25, m:mus(["abs"],["hip_flexors"]), cue:"Lombaires collées au sol en permanence — genoux pliés si ça décolle"},
    {n:"Sleeper stretch", d:"3x30s, bras de frappe", sets:3, work:30, m:mus(["delts_rear"],[]), cue:"Tension oui, douleur jamais"}
   ]}]},
- {id:"lundi", name:"Lundi — Bas du corps + tronc", tag:"gym", dur:"≈58 min", desc:"Fessiers, plaque pubienne, carry",
+ {id:"lundi", name:"Lundi — Bas du corps + tronc", tag:"gym", dur:"≈45 min", desc:"Fessiers, plaque pubienne, carry",
   blocks:[
-   {label:"Échauffement", trans:0, rest:0, exos:[
-    {n:"Échauffement", d:"Vélo 4 min + squeeze 3 angles (note le score /10) + cat-camel x8 + glute bridge x10", sets:1, m:mus([],["quads","glutes","adductors"]), cue:"Monte la température, réveille les fessiers"}]},
-   {label:"Bloc A — squat, repos 2:00 · pronation glissée dedans", trans:30, rest:90, exos:[
-    {n:"Squat gobelet tempo", d:"4x8 · 22 kg · descente 4s", sets:4, load:"22 kg (phase 1) — barre en phase 2", m:mus(["quads","glutes"],["abs","adductors"]), cue:"Tempo strict : 4s de descente, gainage antérieur"},
-    {n:"Pronation lourde (kiné)", d:"3x8-10 lent", sets:3, m:mus(["forearms"],[]), cue:"Freine bien le retour, zéro douleur"}]},
-   {label:"Bloc B — le lift roi, B1→B2 (20s), repos 1:30", trans:20, rest:90, exos:[
-    {n:"Hip thrust lourd", d:"4x8-10 — progression prioritaire", sets:4, m:mus(["glutes"],["hamstrings"]), cue:"Menton rentré, fin de mouvement par rétroversion, pas par cambrure"},
-    {n:"Psoas march élastique", d:"3x10 par côté · tenue 2s", sets:3, m:mus(["hip_flexors"],["abs"]), cue:"Le genou monte au-dessus de 90°, tronc immobile"}]},
-   {label:"Bloc C — plaque pubienne, C1→C2 (20s), repos 1:00", trans:20, rest:60, exos:[
-    {n:"Copenhagen raises", d:"3x8 par côté, lent", sets:3, m:mus(["adductors"],["obliques"]), cue:"Descente 3s contrôlée"},
-    {n:"Ab wheel à genoux", d:"3x8, amplitude progressive", sets:3, m:mus(["abs"],["obliques","lats"]), cue:"Bassin rétroversé, jamais d'arche lombaire"}]},
-   {label:"Bloc D — final, D1→D2 (15s), repos 0:45", trans:15, rest:45, exos:[
-    {n:"Mollet assis", d:"4x12 lourd", sets:4, m:mus(["calves"],[]), cue:"Pause 1s en bas, extension complète"},
-    {n:"Suitcase carry", d:"3x30 m par côté", sets:3, m:mus(["obliques","forearms"],["traps","lower_back"]), cue:"Reste parfaitement droit, épaules basses"}]},
-   {label:"Fin de séance — endurance lombaire", trans:0, rest:45, exos:[
-    {n:"Extension lombaire au banc", d:"2x12-15 lentes, amplitude neutre", sets:2, m:mus(["lower_back"],["glutes","hamstrings"]), cue:"Monte jusqu'à l'alignement, JAMAIS en hyperextension"}]}
+   {label:"Échauffement — 4 min", trans:0, rest:0, exos:[
+    {n:"Échauffement", d:"Vélo 3 min + squeeze 3 angles (note le score /10) + glute bridge x10", sets:1, m:mus([],["quads","glutes","adductors"]), cue:"Court mais réel : température et fessiers réveillés"}]},
+   {label:"Bloc A — squat, repos plein 1:45", trans:0, rest:105, exos:[
+    {n:"Squat gobelet tempo", d:"3x8 · descente 4s", sets:3, prog:"load", lo:8, hi:8, inc:2.5, load:"22 kg (phase 1) — barre en phase 2", m:mus(["quads","glutes"],["abs","adductors"]), cue:"Tempo strict : 4s de descente, gainage antérieur"}]},
+   {label:"Bloc B — le lift roi, B1→B2 (20s), repos 1:20", trans:20, rest:80, exos:[
+    {n:"Hip thrust lourd", d:"4x8-10 — progression prioritaire", sets:4, prog:"range", lo:8, hi:10, inc:2.5, m:mus(["glutes"],["hamstrings"]), cue:"Menton rentré, fin de mouvement par rétroversion, pas par cambrure"},
+    {n:"Psoas march élastique", d:"2x10 par côté · tenue 2s", sets:2, prog:"kine", m:mus(["hip_flexors"],["abs"]), cue:"Le genou monte au-dessus de 90°, tronc immobile"}]},
+   {label:"Bloc C — plaque pubienne, C1→C2 (20s), repos 0:50", trans:20, rest:50, exos:[
+    {n:"Copenhagen raises", d:"3x8 par côté, lent", sets:3, prog:"bw", lo:8, hi:8, m:mus(["adductors"],["obliques"]), cue:"Descente 3s contrôlée"},
+    {n:"Ab wheel à genoux", d:"3x8, amplitude progressive", sets:3, prog:"bw", lo:8, hi:8, m:mus(["abs"],["obliques","lats"]), cue:"Bassin rétroversé, jamais d'arche lombaire"}]},
+   {label:"Bloc D — final, D1→D2 (15s), repos 0:40", trans:15, rest:40, exos:[
+    {n:"Suitcase carry", d:"2x30 m par côté", sets:2, prog:"load", lo:30, hi:30, inc:2, m:mus(["obliques","forearms"],["traps","lower_back"]), cue:"Reste parfaitement droit, épaules basses"},
+    {n:"Pronation lourde (kiné)", d:"3x8-10 lent", sets:3, prog:"kine", m:mus(["forearms"],[]), cue:"Freine bien le retour, zéro douleur"}]},
+   {label:"Fin de séance — endurance lombaire", trans:0, rest:40, exos:[
+    {n:"Extension lombaire au banc", d:"2x12-15 lentes, amplitude neutre", sets:2, prog:"kine", m:mus(["lower_back"],["glutes","hamstrings"]), cue:"Monte jusqu'à l'alignement, JAMAIS en hyperextension"}]}
   ]},
- {id:"mercredi", name:"Mercredi — Dos + épaules", tag:"gym", dur:"≈58 min", desc:"Tractions, coiffe, suspension",
+ {id:"mercredi", name:"Mercredi — Dos + épaules", tag:"gym", dur:"≈45 min", desc:"Tractions, coiffe, suspension",
   blocks:[
-   {label:"Échauffement", trans:0, rest:0, exos:[
+   {label:"Échauffement — 3 min", trans:0, rest:0, exos:[
     {n:"Échauffement", d:"Scap pull-up 2x8 + band pull-apart 2x15", sets:1, m:mus([],["traps","delts_rear"]), cue:"Omoplates actives avant de charger"}]},
-   {label:"Bloc A — tractions, repos 2:30 · exos kiné glissés dedans", trans:25, rest:90, exos:[
-    {n:"Tractions lestées", d:"5x3-5 · départ +5 kg", sets:5, load:"+5 kg, monte si 5x5 propre", m:mus(["lats"],["biceps","forearms"]), cue:"Prise pronation, poitrine vers la barre"},
-    {n:"Rotation sleeper (kiné)", d:"3x12-15 léger", sets:3, m:mus(["delts_rear"],[]), cue:"Filler pendant le repos des tractions"},
-    {n:"Élévation derrière la tête (kiné)", d:"3x10", sets:3, m:mus(["delts"],["traps"]), cue:"Filler — léger, contrôle total"}]},
-   {label:"Bloc B — dos/pecs, B1→B2 (20s), repos 1:15", trans:20, rest:75, exos:[
-    {n:"Rowing appuyé", d:"4x8-10 — chest supported ou haltère au banc", sets:4, m:mus(["lats","traps"],["biceps"]), cue:"Lombaires au repos, tire avec le coude"},
-    {n:"Écarté poulie", d:"4x12-15, grand étirement", sets:4, m:mus(["chest"],["delts"]), cue:"Coudes verrouillés légèrement fléchis, omoplates plaquées"}]},
+   {label:"Bloc A — tractions, repos 2:00 · exos kiné glissés dedans", trans:25, rest:120, exos:[
+    {n:"Tractions lestées", d:"5x3-5", sets:5, prog:"range", lo:3, hi:5, inc:1.25, load:"monte de 1,25 kg quand les 5 séries passent à 5", m:mus(["lats"],["biceps","forearms"]), cue:"Prise pronation, poitrine vers la barre"},
+    {n:"Rotation sleeper (kiné)", d:"2x12-15 léger", sets:2, prog:"kine", m:mus(["delts_rear"],[]), cue:"Filler pendant le repos des tractions"},
+    {n:"Élévation derrière la tête (kiné)", d:"2x10", sets:2, prog:"kine", m:mus(["delts"],["traps"]), cue:"Filler — léger, contrôle total"}]},
+   {label:"Bloc B — dos/pecs, B1→B2 (20s), repos 1:10", trans:20, rest:70, exos:[
+    {n:"Rowing appuyé", d:"3x8-10 — chest supported ou haltère au banc", sets:3, prog:"range", lo:8, hi:10, inc:2.5, m:mus(["lats","traps"],["biceps"]), cue:"Lombaires au repos, tire avec le coude"},
+    {n:"Écarté poulie", d:"3x12-15, grand étirement", sets:3, prog:"range", lo:12, hi:15, inc:2.5, m:mus(["chest"],["delts"]), cue:"Coudes verrouillés légèrement fléchis, omoplates plaquées"}]},
    {label:"Bloc C — épaules, C1→C2 (15s), repos 0:45", trans:15, rest:45, exos:[
-    {n:"Élévations latérales", d:"4x12-15", sets:4, m:mus(["delts"],["traps"]), cue:"Monte avec le coude, pas la main"},
-    {n:"Oiseau", d:"4x12-15, poulie ou haltères", sets:4, m:mus(["delts_rear"],["traps"]), cue:"Tempo 2-1-2, zéro élan"}]},
-   {label:"Bloc D — final + suspension, D1→D2 (20s), repos 0:45", trans:20, rest:45, exos:[
-    {n:"Face pull", d:"3x12-15 · 23 kg", sets:3, m:mus(["delts_rear","traps"],[]), cue:"Termine coudes hauts, pouces vers l'arrière"},
-    {n:"Hanging knee raises", d:"3x8-10, montée contrôlée", sets:3, m:mus(["abs","hip_flexors"],["forearms"]), cue:"Zéro balancier — rétroverse le bassin en montant"}]}
+    {n:"Élévations latérales", d:"3x12-15", sets:3, prog:"range", lo:12, hi:15, inc:1, m:mus(["delts"],["traps"]), cue:"Monte avec le coude, pas la main"},
+    {n:"Face pull", d:"3x12-15", sets:3, prog:"range", lo:12, hi:15, inc:2.5, m:mus(["delts_rear","traps"],[]), cue:"Termine coudes hauts, pouces vers l'arrière"}]},
+   {label:"Fin de séance — suspension", trans:0, rest:45, exos:[
+    {n:"Hanging knee raises", d:"3x8-10, montée contrôlée", sets:3, prog:"bw", lo:8, hi:10, m:mus(["abs","hip_flexors"],["forearms"]), cue:"Zéro balancier — rétroverse le bassin en montant"}]}
   ]},
- {id:"vendredi", name:"Vendredi — Poussée + hinge + rotation", tag:"gym", dur:"≈58 min", desc:"DC, chaîne postérieure, chops, bras",
+ {id:"vendredi", name:"Vendredi — Poussée + hinge + rotation", tag:"gym", dur:"≈45 min", desc:"DC, chaîne postérieure, chops, bras",
   blocks:[
-   {label:"Échauffement", trans:0, rest:0, exos:[
-    {n:"Échauffement", d:"Scapula 5 min + cat-camel x8 + bird dog x6 par côté", sets:1, m:mus([],["lower_back","traps"]), cue:"Colonne réveillée avant le hinge"}]},
-   {label:"Bloc A — chaîne postérieure, A1→A2 (20s), repos 1:30", trans:20, rest:90, exos:[
-    {n:"Leg curl (ph.1) / RDL technique (ph.2)", d:"3x8-10", sets:3, load:"RDL : 50-60 kg, bassin neutre", m:mus(["hamstrings"],["glutes","lower_back"]), cue:"Phase 2 : hanches en arrière, dos rigide, barre collée aux jambes"},
-    {n:"Glute bridge une jambe", d:"3x10 par côté", sets:3, m:mus(["glutes"],["hamstrings"]), cue:"Bassin horizontal, pas de rotation"}]},
-   {label:"Bloc B — antagoniste, B1→B2→B3 (20s), repos 1:15", trans:20, rest:75, exos:[
-    {n:"Développé couché", d:"4x6", sets:4, load:"57,5 kg puis progression", m:mus(["chest"],["triceps","delts"]), cue:"Omoplates serrées, pieds ancrés"},
-    {n:"Tractions volume", d:"4x6-8, loin de l'échec", sets:4, m:mus(["lats"],["biceps"]), cue:"Poids de corps, qualité maximale"},
-    {n:"Écarté poulie léger", d:"2x12-15", sets:2, m:mus(["chest"],[]), cue:"Focus étirement"}]},
+   {label:"Échauffement — 3 min", trans:0, rest:0, exos:[
+    {n:"Échauffement", d:"Scapula 2 min + cat-camel x8 + bird dog x6 par côté", sets:1, m:mus([],["lower_back","traps"]), cue:"Colonne réveillée avant le hinge"}]},
+   {label:"Bloc A — chaîne postérieure, A1→A2 (20s), repos 1:20", trans:20, rest:80, exos:[
+    {n:"Leg curl (ph.1) / RDL technique (ph.2)", d:"3x8-10", sets:3, prog:"range", lo:8, hi:10, inc:2.5, load:"RDL : 50-60 kg, bassin neutre", m:mus(["hamstrings"],["glutes","lower_back"]), cue:"Phase 2 : hanches en arrière, dos rigide, barre collée aux jambes"},
+    {n:"Glute bridge une jambe", d:"2x10 par côté", sets:2, prog:"bw", lo:10, hi:10, m:mus(["glutes"],["hamstrings"]), cue:"Bassin horizontal, pas de rotation"}]},
+   {label:"Bloc B — antagoniste, B1→B2 (20s), repos 1:15", trans:20, rest:75, exos:[
+    {n:"Développé couché", d:"4x8-10 haltères", sets:4, prog:"range", lo:8, hi:10, inc:4, load:"haltères, charge totale des deux", m:mus(["chest"],["triceps","delts"]), cue:"Omoplates serrées, pieds ancrés — coudes à 45°"},
+    {n:"Tractions volume", d:"4x8-10, loin de l'échec", sets:4, prog:"bw", lo:8, hi:10, m:mus(["lats"],["biceps"]), cue:"Poids de corps, qualité maximale"}]},
    {label:"Bloc C — rotation, C1→C2→C3 (15s), repos 0:45", trans:15, rest:45, exos:[
-    {n:"Pallof press", d:"3x10 par côté", sets:3, m:mus(["obliques"],["abs"]), cue:"Résiste à la rotation, bassin fixe"},
-    {n:"Chop câble (ph.2) / Pallof marché (ph.1)", d:"3x10 par côté", sets:3, m:mus(["obliques"],["abs","lats"]), cue:"Contrôlé haut→bas, la rotation vient du thoracique"},
-    {n:"Pronation lourde (kiné)", d:"3x8-10", sets:3, m:mus(["forearms"],[]), cue:"Zéro douleur"}]},
-   {label:"Bloc D — bras, D1→D2 (20s), repos 1:00", trans:20, rest:60, exos:[
-    {n:"Curl excentrique", d:"3x6 · 14 kg", sets:3, m:mus(["biceps"],["forearms"]), cue:"5s de descente — prise marteau si poignet sensible"},
-    {n:"Triceps poulie", d:"3x8-10 · 43 kg", sets:3, m:mus(["triceps"],[]), cue:"Coudes fixes le long du corps"}]},
-   {label:"Fin de séance — endurance lombaire", trans:0, rest:45, exos:[
-    {n:"Extension lombaire au banc", d:"2x12-15 lentes, amplitude neutre", sets:2, m:mus(["lower_back"],["glutes","hamstrings"]), cue:"Objectif à 4 semaines : iso 60s horizontal"}]}
+    {n:"Pallof press", d:"3x10 par côté", sets:3, prog:"load", lo:10, hi:10, inc:2.5, m:mus(["obliques"],["abs"]), cue:"Résiste à la rotation, bassin fixe"},
+    {n:"Chop câble (ph.2) / Pallof marché (ph.1)", d:"3x10 par côté", sets:3, prog:"load", lo:10, hi:10, inc:2.5, m:mus(["obliques"],["abs","lats"]), cue:"Contrôlé haut→bas, la rotation vient du thoracique"},
+    {n:"Pronation lourde (kiné)", d:"3x8-10", sets:3, prog:"kine", m:mus(["forearms"],[]), cue:"Zéro douleur"}]},
+   {label:"Bloc D — bras, D1→D2 (15s), repos 0:50", trans:15, rest:50, exos:[
+    {n:"Curl excentrique", d:"3x6 · 5s de descente", sets:3, prog:"load", lo:6, hi:6, inc:2, m:mus(["biceps"],["forearms"]), cue:"5s de descente — prise marteau si poignet sensible"},
+    {n:"Triceps poulie", d:"3x8-10", sets:3, prog:"range", lo:8, hi:10, inc:2.5, m:mus(["triceps"],[]), cue:"Coudes fixes le long du corps"}]},
+   {label:"Fin de séance — endurance lombaire", trans:0, rest:40, exos:[
+    {n:"Extension lombaire au banc", d:"2x12-15 lentes, amplitude neutre", sets:2, prog:"kine", m:mus(["lower_back"],["glutes","hamstrings"]), cue:"Objectif : iso 60s horizontal"}]}
   ]}
 ];
 
@@ -1014,6 +1019,62 @@ function renderStoreState(){
   else if (storeMode === "artifact"){ el.textContent = "Charges sauvegardées — à confirmer à la prochaine ouverture"; el.className = "stchip"; w.classList.add("hidden"); }
   else { el.textContent = "Charges non conservées ici ✗"; el.className = "stchip ko"; w.classList.remove("hidden"); }
 }
+/* ─────────── Conseil de charge ───────────
+   Applique les règles du programme : cible bouclée + douleur ≤3 → on monte ;
+   fourchette → les reps montent d'abord ; 3 séances bloquées → −10 % ;
+   douleur 4-5 → −20 % et pas de progression ; exos kiné → jamais de course à la charge. */
+function hist(name, n){
+  var a = DB.loads[name] || [], t = todayStr(), out = [];
+  for (var i = a.length - 1; i >= 0 && out.length < (n || 4); i--) if (a[i].d !== t) out.push(a[i]);
+  return out;                                  // du plus récent au plus ancien
+}
+function setsOK(x, e){
+  var rs = x.rs || [], n = e.sets || 1;
+  if (rs.length < n) return false;
+  for (var i = 0; i < n; i++) if (!(rs[i] >= e.hi)) return false;
+  return true;
+}
+function round5(v){ return Math.round(v * 2) / 2; }
+function goalTxt(e){ return (e.sets || 1) + "x" + (e.lo === e.hi ? e.hi : e.lo + "-" + e.hi); }
+function advise(e){
+  if (!e.prog) return null;
+  var h = hist(e.n), last = h[0];
+  if (!last) return {k: "info", t: "Première fois", s: "Choisis une charge où la dernière série reste propre, et note tes reps."};
+  var w = typeof last.w === "number" ? last.w : null;
+  var prev = "Dernière fois : " + (perfTxt(last) || "rien de noté") + (typeof last.p === "number" ? " · douleur " + last.p + "/10" : "") + " (" + fmtD(last.d) + ")";
+  if (typeof last.p === "number" && last.p >= 6)
+    return {k: "down", t: "On ne charge pas", s: "Tu avais noté " + last.p + "/10. Douleur rouge : consultation avant de reprendre cet exo."};
+  if (typeof last.p === "number" && last.p >= 4)
+    return {k: "down", t: w !== null ? "Redescends à " + fmtW(round5(w * 0.8)) + " kg" : "Allège", s: "Douleur " + last.p + "/10 la dernière fois, c'est orange : −20 % et aucune progression tant que ce n'est pas à 3 ou moins."};
+  if (e.prog === "kine")
+    return {k: "hold", t: "Qualité, pas charge", s: "Exo kiné : on ne court pas après les kilos. " + prev};
+  if (!last.rs || !last.rs.length)
+    return {k: "info", t: "Note tes reps", s: "Sans les reps série par série, je ne peux pas te dire quand monter. " + prev};
+  var ok = setsOK(last, e);
+  if (e.prog === "bw")
+    return ok ? {k: "up", t: "Ajoute 1 rep par série", s: "Tu as bouclé " + goalTxt(e) + ". " + prev}
+              : {k: "hold", t: "Objectif : " + goalTxt(e), s: prev};
+  if (ok && w !== null)
+    return {k: "up", t: "Monte à " + fmtW(w + (e.inc || 2.5)) + " kg", s: "Tu as bouclé " + goalTxt(e) + " sans douleur. " + prev};
+  if (ok) return {k: "up", t: "Monte d'un cran", s: "Tu as bouclé " + goalTxt(e) + ". " + prev};
+  var fails = 0;
+  for (var i = 0; i < h.length; i++){ if (h[i].w === w && !setsOK(h[i], e)) fails++; else break; }
+  if (fails >= 3 && w !== null)
+    return {k: "down", t: "Redescends à " + fmtW(round5(w * 0.9)) + " kg", s: "Trois séances bloquées à " + fmtW(w) + " kg. On recule de 10 % pour repartir."};
+  return {k: "hold", t: w !== null ? "Reste à " + fmtW(w) + " kg" : "Même objectif",
+          s: "À battre : " + goalTxt(e) + (last.rs.length ? ", tu étais à " + last.rs.join("/") : "") + "."};
+}
+function renderReco(e){
+  var box = document.getElementById("recobox");
+  if (!box) return;
+  var a = advise(e);
+  box.classList.toggle("hidden", !a);
+  if (!a) return;
+  box.className = "recobox " + a.k;
+  box.innerHTML = '<div class="lt">' + (a.k === "up" ? "Tu peux monter" : a.k === "down" ? "On lève le pied" : "Reco du jour") +
+    '</div><b>' + escapeHtml(a.t) + '</b><div class="sub2">' + escapeHtml(a.s) + '</div>';
+}
+
 /* ─────────── Point de la semaine ───────────
    Une ligne par semaine, rangée au lundi : rempli mardi, ça compte pour la même semaine. */
 var CK = [["wt", "ck-wt"], ["ad", "ck-ad"], ["lb", "ck-lb"], ["qd", "ck-qd"], ["wr", "ck-wr"], ["note", "ck-note"]];
@@ -1166,6 +1227,11 @@ async function pushLocal(){
 }
 async function pullRemote(){
   var since = DB.pulledAt || "1970-01-01T00:00:00Z", maxT = since;
+  // Garde-fous : une saisie locale pas encore envoyée n'est JAMAIS écrasée par
+  // le serveur, et l'horloge du serveur sert de référence pour « tout est envoyé »
+  // (comparer deux horloges différentes faisait croire à un retard permanent).
+  var pushedRef = DB.pushedAt || 0, maxSrv = 0;
+  var dirty = function(o){ return o && (o.u || 0) > pushedRef; };
   var q = await sb.from("workout_entry").select("exo,day,weight,reps,pain,comment,updated_at").gt("updated_at", since).order("updated_at", {ascending: true}).limit(2000);
   if (q.error) throw q.error;
   (q.data || []).forEach(function(r){
@@ -1173,6 +1239,8 @@ async function pullRemote(){
     var arr = DB.loads[r.exo] || (DB.loads[r.exo] = []), it = null;
     for (var i = arr.length - 1; i >= 0; i--){ if (arr[i].d === r.day){ it = arr[i]; break; } }
     var srv = Date.parse(r.updated_at);
+    if (srv > maxSrv) maxSrv = srv;
+    if (dirty(it)) return;                          // saisie locale pas encore envoyée : elle gagne
     if (it && (it.u || 0) >= srv) return;           // le local est plus récent : on le garde
     if (!it){ it = {d: r.day}; arr.push(it); arr.sort(function(a, b){ return a.d.localeCompare(b.d); }); }
     if (r.weight === null) delete it.w; else it.w = r.weight;
@@ -1187,6 +1255,8 @@ async function pullRemote(){
   (s.data || []).forEach(function(r){
     if (r.updated_at > maxT) maxT = r.updated_at;
     var k = r.day + "|" + r.session, cur = DB.sess[k], srv = Date.parse(r.updated_at);
+    if (srv > maxSrv) maxSrv = srv;
+    if (dirty(cur)) return;
     if (cur && (cur.u || 0) >= srv) return;
     DB.sess[k] = {note: r.note || "", u: srv};
   });
@@ -1195,6 +1265,8 @@ async function pullRemote(){
   (ck.data || []).forEach(function(r){
     if (r.updated_at > maxT) maxT = r.updated_at;
     var cur = DB.check[r.day], srv = Date.parse(r.updated_at);
+    if (srv > maxSrv) maxSrv = srv;
+    if (dirty(cur)) return;
     if (cur && (cur.u || 0) >= srv) return;
     var o = {u: srv};
     if (r.weight !== null) o.wt = Number(r.weight);
@@ -1210,6 +1282,7 @@ async function pullRemote(){
   DB.coach = {};
   (c.data || []).forEach(function(r){ if (r.note) DB.coach[r.exo] = {note: r.note, at: r.updated_at}; });
   DB.pulledAt = maxT;
+  if (maxSrv > (DB.pushedAt || 0)) DB.pushedAt = maxSrv;   // ce qui vient du serveur est, par définition, déjà envoyé
 }
 function renderCoach(e){
   var cb = document.getElementById("coachbox");
@@ -1380,7 +1453,9 @@ function openList(s){
       var restTxt = b.rest ? " · repos " + fmt(b.rest) : "";
       var ll = lastLoad(e.n);
       var loadTxt = ll ? " · dern. " + fmtW(ll.w) + " kg" : "";
-      d.innerHTML = "<b>" + e.n + "</b><span>" + (e.sets > 1 ? e.sets + " séries" : "1 série") + restTxt + loadTxt + "</span>";
+      var a = advise(e);
+      var mark = a && a.k === "up" ? ' <span class="up">↑</span>' : "";
+      d.innerHTML = "<b>" + e.n + "</b><span>" + (e.sets > 1 ? e.sets + " séries" : "1 série") + restTxt + loadTxt + mark + "</span>";
       d.onclick = function(){
         var first = steps.findIndex(function(st){ return st.e === e; });
         startAt(first >= 0 ? first : 0);
@@ -1410,6 +1485,7 @@ function renderStep(){
   document.getElementById("p-cue").textContent = e.cue || "";
   renderLoadBox(e);
   renderCoach(e);
+  renderReco(e);
   renderBody(e);
   var fk = FIGMAP[e.n];
   document.getElementById("svg-how").innerHTML = fk ? figSvg(fk).replace(/__F__/g, "var(--fig)").replace(/__G__/g, "var(--fig2)") : "";
