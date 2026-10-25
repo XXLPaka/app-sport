@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Séances guidées — Bloc 2</title>
+<title>Séances guidées — Bloc 3</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1E5748">
 <meta name="mobile-web-app-capable" content="yes">
@@ -139,7 +139,7 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
 <div class="wrap">
 
 <div id="home">
-  <p class="eyebrow">Bloc 2 · chaîne centrale</p>
+  <p class="eyebrow">Bloc 3 · force et rotation</p>
   <h1>Séances guidées</h1>
   <div id="store-state" class="stchip">Charges : vérification…</div>
   <div id="store-warn" class="warnbar hidden">Dans cet affichage, tes charges ne seront pas conservées à la fermeture. Pour les garder : ouvre cette app dans le navigateur de ton téléphone (fichier téléchargé ou hébergé) et ajoute-la à l'écran d'accueil.</div>
@@ -744,25 +744,25 @@ var SESSIONS = [
    {n:"Hollow body hold", d:"3 tenues de 25s", sets:3, work:25, m:mus(["abs"],["hip_flexors"]), cue:"Lombaires collées au sol en permanence — genoux pliés si ça décolle"},
    {n:"Sleeper stretch", d:"3x30s, bras de frappe", sets:3, work:30, m:mus(["delts_rear"],[]), cue:"Tension oui, douleur jamais"}
   ]}]},
- {id:"lundi", name:"Lundi — Bas du corps + tronc", tag:"gym", dur:"≈45 min", desc:"Fessiers, plaque pubienne, carry",
+ {id:"lundi", name:"Lundi — Force bas du corps + tronc", tag:"gym", dur:"≈45 min", desc:"Squat barre, explosivité, anti-rotation",
   blocks:[
-   {label:"Échauffement — 4 min", trans:0, rest:0, exos:[
-    {n:"Échauffement", d:"Vélo 3 min + squeeze 3 angles (note le score /10) + glute bridge x10", sets:1, m:mus([],["quads","glutes","adductors"]), cue:"Court mais réel : température et fessiers réveillés"}]},
-   {label:"Bloc A — squat, repos plein 1:45", trans:0, rest:105, exos:[
-    {n:"Squat gobelet tempo", d:"3x8 · descente 4s", sets:3, prog:"load", lo:8, hi:8, inc:2.5, load:"22 kg (phase 1) — barre en phase 2", m:mus(["quads","glutes"],["abs","adductors"]), cue:"Tempo strict : 4s de descente, gainage antérieur"}]},
-   {label:"Bloc B — le lift roi, B1→B2 (20s), repos 1:20", trans:20, rest:80, exos:[
-    {n:"Hip thrust lourd", d:"4x8-10 — progression prioritaire", sets:4, prog:"range", lo:8, hi:10, inc:2.5, m:mus(["glutes"],["hamstrings"]), cue:"Menton rentré, fin de mouvement par rétroversion, pas par cambrure"},
-    {n:"Psoas march élastique", d:"2x10 par côté · tenue 2s", sets:2, prog:"kine", m:mus(["hip_flexors"],["abs"]), cue:"Le genou monte au-dessus de 90°, tronc immobile"}]},
-   {label:"Bloc C — plaque pubienne, C1→C2 (20s), repos 0:50", trans:20, rest:50, exos:[
-    {n:"Copenhagen raises", d:"3x8 par côté, lent", sets:3, prog:"bw", lo:8, hi:8, m:mus(["adductors"],["obliques"]), cue:"Descente 3s contrôlée"},
-    {n:"Ab wheel à genoux", d:"3x8, amplitude progressive", sets:3, prog:"bw", lo:8, hi:8, m:mus(["abs"],["obliques","lats"]), cue:"Bassin rétroversé, jamais d'arche lombaire"}]},
-   {label:"Bloc D — final, D1→D2 (15s), repos 0:40", trans:15, rest:40, exos:[
-    {n:"Suitcase carry", d:"2x30 m par côté", sets:2, prog:"load", lo:30, hi:30, inc:2, m:mus(["obliques","forearms"],["traps","lower_back"]), cue:"Reste parfaitement droit, épaules basses"},
-    {n:"Pronation lourde (kiné)", d:"3x8-10 lent", sets:3, prog:"kine", m:mus(["forearms"],[]), cue:"Freine bien le retour, zéro douleur"}]},
+   {label:"Échauffement — 3 min", trans:0, rest:0, exos:[
+    {n:"Échauffement", d:"Vélo 2 min + squeeze 3 angles (note le score /10) + glute bridge x10 + 10 rotations thoraciques", sets:1, m:mus([],["quads","glutes","adductors"]), cue:"Court mais réel : température, fessiers, thoracique"}]},
+   {label:"Bloc A — explosivité, frais, repos 1:00", trans:0, rest:60, exos:[
+    {n:"Box jump", d:"4x3 · qualité d'atterrissage", sets:4, prog:"qual", tip:"Monte la hauteur de la box quand les 4x3 sont souples et sans à-coup. Jamais de série longue.", m:mus(["quads","glutes"],["calves"]), cue:"Atterris souple, genoux dans l'axe. Tu redescends en marchant, jamais en sautant"}]},
+   {label:"Bloc B — force, repos plein 2:00", trans:0, rest:120, exos:[
+    {n:"Squat barre", d:"4x5 lourd · descente contrôlée", sets:4, prog:"load", lo:5, hi:5, inc:2.5, load:"départ 40 kg, monte de 2,5 kg quand les 4x5 passent", m:mus(["quads","glutes"],["abs","adductors"]), cue:"Dos neutre, genoux dans l'axe, remontée franche"}]},
+   {label:"Bloc C — fessiers + plaque pubienne, C1→C2 (20s), repos 1:15", trans:20, rest:75, exos:[
+    {n:"Hip thrust lourd", d:"4x6-8 lourd", sets:4, prog:"range", lo:6, hi:8, inc:2.5, m:mus(["glutes"],["hamstrings"]), cue:"Menton rentré, fin de mouvement par rétroversion, pas par cambrure"},
+    {n:"Copenhagen raises", d:"3x8 par côté, lent", sets:3, prog:"bw", lo:8, hi:8, m:mus(["adductors"],["obliques"]), cue:"Descente 3s contrôlée"}]},
+   {label:"Bloc D — tronc, D1→D2→D3 (15s), repos 0:45", trans:15, rest:45, exos:[
+    {n:"Ab wheel à genoux", d:"3x8-10, amplitude progressive", sets:3, prog:"bw", lo:8, hi:10, m:mus(["abs"],["obliques","lats"]), cue:"Bassin rétroversé, jamais d'arche lombaire"},
+    {n:"Pallof press", d:"3x10 par côté · tenue 2s", sets:3, prog:"load", lo:10, hi:10, inc:2.5, m:mus(["obliques"],["abs"]), cue:"Résiste à la rotation, bassin fixe — la base de ton revers"},
+    {n:"Suitcase carry", d:"2x40 m par côté", sets:2, prog:"load", lo:40, hi:40, inc:2, m:mus(["obliques","forearms"],["traps","lower_back"]), cue:"Reste parfaitement droit, épaules basses"}]},
    {label:"Fin de séance — endurance lombaire", trans:0, rest:40, exos:[
-    {n:"Extension lombaire au banc", d:"2x12-15 lentes, amplitude neutre", sets:2, prog:"kine", m:mus(["lower_back"],["glutes","hamstrings"]), cue:"Monte jusqu'à l'alignement, JAMAIS en hyperextension"}]}
+    {n:"Extension lombaire au banc", d:"2x15 lentes, amplitude neutre", sets:2, prog:"kine", m:mus(["lower_back"],["glutes","hamstrings"]), cue:"C'est ce qui tient ton dos en fin de match. Jamais d'hyperextension"}]}
   ]},
- {id:"mercredi", name:"Mercredi — Dos + épaules", tag:"gym", dur:"≈45 min", desc:"Tractions, coiffe, suspension",
+ {id:"mercredi", name:"Mercredi — Dos + épaules", tag:"gym", dur:"≈45 min", desc:"Tractions lestées, rowing lourd, coiffe",
   blocks:[
    {label:"Échauffement — 3 min", trans:0, rest:0, exos:[
     {n:"Échauffement", d:"Scap pull-up 2x8 + band pull-apart 2x15", sets:1, m:mus([],["traps","delts_rear"]), cue:"Omoplates actives avant de charger"}]},
@@ -770,8 +770,8 @@ var SESSIONS = [
     {n:"Tractions lestées", d:"5x3-5", sets:5, prog:"range", lo:3, hi:5, inc:1.25, load:"monte de 1,25 kg quand les 5 séries passent à 5", m:mus(["lats"],["biceps","forearms"]), cue:"Prise pronation, poitrine vers la barre"},
     {n:"Rotation sleeper (kiné)", d:"2x12-15 léger", sets:2, prog:"kine", m:mus(["delts_rear"],[]), cue:"Filler pendant le repos des tractions"},
     {n:"Élévation derrière la tête (kiné)", d:"2x10", sets:2, prog:"kine", m:mus(["delts"],["traps"]), cue:"Filler — léger, contrôle total"}]},
-   {label:"Bloc B — dos/pecs, B1→B2 (20s), repos 1:10", trans:20, rest:70, exos:[
-    {n:"Rowing appuyé", d:"3x8-10 — chest supported ou haltère au banc", sets:3, prog:"range", lo:8, hi:10, inc:2.5, m:mus(["lats","traps"],["biceps"]), cue:"Lombaires au repos, tire avec le coude"},
+   {label:"Bloc B — dos lourd, B1→B2 (20s), repos 1:15", trans:20, rest:75, exos:[
+    {n:"Rowing appuyé", d:"4x6-8 lourd", sets:4, prog:"range", lo:6, hi:8, inc:2.5, m:mus(["lats","traps"],["biceps"]), cue:"Lombaires au repos, tire avec le coude"},
     {n:"Écarté poulie", d:"3x12-15, grand étirement", sets:3, prog:"range", lo:12, hi:15, inc:2.5, m:mus(["chest"],["delts"]), cue:"Coudes verrouillés légèrement fléchis, omoplates plaquées"}]},
    {label:"Bloc C — épaules, C1→C2 (15s), repos 0:45", trans:15, rest:45, exos:[
     {n:"Élévations latérales", d:"3x12-15", sets:3, prog:"range", lo:12, hi:15, inc:1, m:mus(["delts"],["traps"]), cue:"Monte avec le coude, pas la main"},
@@ -779,27 +779,23 @@ var SESSIONS = [
    {label:"Fin de séance — suspension", trans:0, rest:45, exos:[
     {n:"Hanging knee raises", d:"3x8-10, montée contrôlée", sets:3, prog:"bw", lo:8, hi:10, m:mus(["abs","hip_flexors"],["forearms"]), cue:"Zéro balancier — rétroverse le bassin en montant"}]}
   ]},
- {id:"vendredi", name:"Vendredi — Poussée + hinge + rotation", tag:"gym", dur:"≈45 min", desc:"DC, chaîne postérieure, chops, bras",
+ {id:"vendredi", name:"Vendredi — Rotation explosive + hinge", tag:"gym", dur:"≈45 min", desc:"Med ball, RDL lourd, DC, tractions",
   blocks:[
    {label:"Échauffement — 3 min", trans:0, rest:0, exos:[
-    {n:"Échauffement", d:"Scapula 2 min + cat-camel x8 + bird dog x6 par côté", sets:1, m:mus([],["lower_back","traps"]), cue:"Colonne réveillée avant le hinge"}]},
-   {label:"Bloc A — chaîne postérieure, A1→A2 (20s), repos 1:20", trans:20, rest:80, exos:[
-    {n:"Leg curl (ph.1) / RDL technique (ph.2)", d:"3x8-10", sets:3, prog:"range", lo:8, hi:10, inc:2.5, load:"RDL : 50-60 kg, bassin neutre", m:mus(["hamstrings"],["glutes","lower_back"]), cue:"Phase 2 : hanches en arrière, dos rigide, barre collée aux jambes"},
+    {n:"Échauffement", d:"Cat-camel x8 + open book x6 par côté + 10 rotations hanches + 5 lancers légers", sets:1, m:mus([],["lower_back","obliques"]), cue:"Thoracique et hanches ouvertes AVANT de lancer"}]},
+   {label:"Bloc A — explosivité en rotation, frais, repos 1:00", trans:0, rest:60, exos:[
+    {n:"Med ball rotation", d:"5x5 par côté · lancé contre un mur", sets:5, prog:"qual", tip:"Cherche la VITESSE, pas le poids. Même ballon, plus fort. Si tu ralentis, tu arrêtes la série.", m:mus(["obliques"],["abs","glutes"]), cue:"La rotation part de la hanche arrière, le tronc suit, les lombaires ne font rien"}]},
+   {label:"Bloc B — hinge lourd, B1→B2 (20s), repos 1:30", trans:20, rest:90, exos:[
+    {n:"RDL barre", d:"4x6-8 lourd", sets:4, prog:"range", lo:6, hi:8, inc:2.5, load:"sangles autorisées : c'est les ischios qu'on travaille, pas le grip", m:mus(["hamstrings"],["glutes","lower_back"]), cue:"Hanches en arrière, dos rigide. Tu t'arrêtes AVANT que le bas du dos s'arrondisse, même si tu peux descendre plus bas"},
     {n:"Glute bridge une jambe", d:"2x10 par côté", sets:2, prog:"bw", lo:10, hi:10, m:mus(["glutes"],["hamstrings"]), cue:"Bassin horizontal, pas de rotation"}]},
-   {label:"Bloc B — antagoniste, B1→B2 (20s), repos 1:15", trans:20, rest:75, exos:[
+   {label:"Bloc C — poussée/tirage, C1→C2 (20s), repos 1:15", trans:20, rest:75, exos:[
     {n:"Développé couché", d:"4x8-10 haltères", sets:4, prog:"range", lo:8, hi:10, inc:4, load:"haltères, charge totale des deux", m:mus(["chest"],["triceps","delts"]), cue:"Omoplates serrées, pieds ancrés — coudes à 45°"},
     {n:"Tractions volume", d:"4x8-10, loin de l'échec", sets:4, prog:"bw", lo:8, hi:10, m:mus(["lats"],["biceps"]), cue:"Poids de corps, qualité maximale"}]},
-   {label:"Bloc C — rotation, C1→C2→C3 (15s), repos 0:45", trans:15, rest:45, exos:[
-    {n:"Pallof press", d:"3x10 par côté", sets:3, prog:"load", lo:10, hi:10, inc:2.5, m:mus(["obliques"],["abs"]), cue:"Résiste à la rotation, bassin fixe"},
-    {n:"Chop câble (ph.2) / Pallof marché (ph.1)", d:"3x10 par côté", sets:3, prog:"load", lo:10, hi:10, inc:2.5, m:mus(["obliques"],["abs","lats"]), cue:"Contrôlé haut→bas, la rotation vient du thoracique"},
-    {n:"Pronation lourde (kiné)", d:"3x8-10", sets:3, prog:"kine", m:mus(["forearms"],[]), cue:"Zéro douleur"}]},
-   {label:"Bloc D — bras, D1→D2 (15s), repos 0:50", trans:15, rest:50, exos:[
-    {n:"Curl excentrique", d:"3x6 · 5s de descente", sets:3, prog:"load", lo:6, hi:6, inc:2, m:mus(["biceps"],["forearms"]), cue:"5s de descente — prise marteau si poignet sensible"},
-    {n:"Triceps poulie", d:"3x8-10", sets:3, prog:"range", lo:8, hi:10, inc:2.5, m:mus(["triceps"],[]), cue:"Coudes fixes le long du corps"}]},
-   {label:"Fin de séance — endurance lombaire", trans:0, rest:40, exos:[
-    {n:"Extension lombaire au banc", d:"2x12-15 lentes, amplitude neutre", sets:2, prog:"kine", m:mus(["lower_back"],["glutes","hamstrings"]), cue:"Objectif : iso 60s horizontal"}]}
+   {label:"Bloc D — rotation chargée, D1→D2 (15s), repos 0:45", trans:15, rest:45, exos:[
+    {n:"Chop câble", d:"3x8 par côté · rapide et contrôlé", sets:3, prog:"load", lo:8, hi:8, inc:2.5, m:mus(["obliques"],["abs","lats"]), cue:"Accélère le câble, freine la fin. La rotation vient du thoracique"},
+    {n:"Pronation lourde (kiné)", d:"3x8-10", sets:3, prog:"kine", m:mus(["forearms"],[]), cue:"Zéro douleur"}]}
   ]}
-];
+];;
 
 var FIGMAP = {
   "Cat-camel":"catcamel", "Open book":"openbook", "Curl-up McGill":"curlup", "Side plank":"sideplank",
@@ -811,9 +807,9 @@ var FIGMAP = {
   "Extension lombaire au banc":"backext", "Tractions lestées":"pullup", "Rotation sleeper (kiné)":"sleeper",
   "Élévation derrière la tête (kiné)":"eleback", "Rowing appuyé":"rowsupport", "Écarté poulie":"fly",
   "Élévations latérales":"latraise", "Oiseau":"rear", "Face pull":"facepull", "Hanging knee raises":"hanging",
-  "Leg curl (ph.1) / RDL technique (ph.2)":"legcurl", "Glute bridge une jambe":"bridge1",
+  "Squat barre":"squat", "Glute bridge une jambe":"bridge1",
   "Développé couché":"bench", "Tractions volume":"pullup", "Écarté poulie léger":"fly",
-  "Pallof press":"pallof", "Chop câble (ph.2) / Pallof marché (ph.1)":"chop",
+  "Pallof press":"pallof", "Chop câble":"chop", "Med ball rotation":"chop",
   "Curl excentrique":"curl", "Triceps poulie":"triceps"
 };
 var QMAP = {
@@ -923,15 +919,36 @@ var storeMode = "memory", persistOK = false, saveTimer = null;
 // v2 : loads[exo] = [{d, w charge, rs reps par série, p douleur/10, c commentaire}] · sess["date|séance"] = {note}
 var DB = {v:2, loads:{}, sess:{}, check:{}, coach:{}, pushedAt:0, pulledAt:null};
 
+// Bloc 3 : deux exos renommés. On reprend leur historique sous le nouveau nom.
+var RENAMES = {
+  "Leg curl (ph.1) / RDL technique (ph.2)": "RDL barre",
+  "Chop câble (ph.2) / Pallof marché (ph.1)": "Chop câble"
+};
+function migrate(db){
+  Object.keys(RENAMES).forEach(function(vieux){
+    var neuf = RENAMES[vieux];
+    if (db.loads[vieux]){
+      var par = {};
+      (db.loads[neuf] || []).concat(db.loads[vieux]).forEach(function(x){ par[x.d] = Object.assign(par[x.d] || {}, x); });
+      db.loads[neuf] = Object.keys(par).sort().slice(-12).map(function(d){ return par[d]; });
+      delete db.loads[vieux];
+    }
+    if (db.coach && db.coach[vieux]){
+      if (!db.coach[neuf]) db.coach[neuf] = db.coach[vieux];
+      delete db.coach[vieux];
+    }
+  });
+  return db;
+}
 function parseDB(raw){
   var d = null;
   try{ d = JSON.parse(raw); }catch(e){ return null; }
   if (!d || typeof d !== "object" || Array.isArray(d)) return null;
-  if (d.v >= 2) return {v:2, loads:d.loads || {}, sess:d.sess || {}, check:d.check || {}, coach:d.coach || {}, pushedAt:d.pushedAt || 0, pulledAt:d.pulledAt || null};
-  return {v:2, loads:d, sess:{}, check:{}, coach:{}, pushedAt:0, pulledAt:null}; // ancien format : map exo -> [{d, w}]
+  if (d.v >= 2) return migrate({v:2, loads:d.loads || {}, sess:d.sess || {}, check:d.check || {}, coach:d.coach || {}, pushedAt:d.pushedAt || 0, pulledAt:d.pulledAt || null, synced1:d.synced1 || 0});
+  return migrate({v:2, loads:d, sess:{}, check:{}, coach:{}, pushedAt:0, pulledAt:null}); // ancien format : map exo -> [{d, w}]
 }
 // Horodate une modification locale : c'est ce qui déclenche l'envoi vers Supabase
-function touch(it){ if (it) it.u = Date.now(); return it; }
+function touch(it){ if (it){ it.u = Date.now(); it.q = 1; } return it; }
 
 function todayStr(){ var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
 function fmtD(s){ var p = (s || "").split("-"); return p.length === 3 ? p[2] + "/" + p[1] : s; }
@@ -1048,6 +1065,8 @@ function advise(e){
     return {k: "down", t: w !== null ? "Redescends à " + fmtW(round5(w * 0.8)) + " kg" : "Allège", s: "Douleur " + last.p + "/10 la dernière fois, c'est orange : −20 % et aucune progression tant que ce n'est pas à 3 ou moins."};
   if (e.prog === "kine")
     return {k: "hold", t: "Qualité, pas charge", s: "Exo kiné : on ne court pas après les kilos. " + prev};
+  if (e.prog === "qual")
+    return {k: "hold", t: "Progresse en qualité", s: (e.tip || "") + " " + prev};
   if (!last.rs || !last.rs.length)
     return {k: "info", t: "Note tes reps", s: "Sans les reps série par série, je ne peux pas te dire quand monter. " + prev};
   var ok = setsOK(last, e);
@@ -1092,7 +1111,7 @@ function commitCheck(){
     if (isNaN(v)) delete c[f[0]];
     else c[f[0]] = f[0] === "wt" ? v : Math.min(10, Math.max(0, Math.round(v)));
   });
-  c.u = Date.now();
+  c.u = Date.now(); c.q = 1;
   saveDB(); renderCheckState();
 }
 function ckFilled(c){ return !!(c && (typeof c.wt === "number" || typeof c.ad === "number" || typeof c.lb === "number" || typeof c.qd === "number" || typeof c.wr === "number")); }
@@ -1132,7 +1151,7 @@ var SUPA = {
   url: "https://casumtilzfeeuoofysgx.supabase.co",
   key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhc3VtdGlsemZlZXVvb2Z5c2d4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNjE0MjMsImV4cCI6MjEwNTYzNzQyM30.4icsTZKPs4VcUnt0JYMtiqLz5LGSDzwq9OGzPaaZcnI"
 }; // clé publique : elle ne donne accès à rien sans connexion (RLS)
-var sb = null, cloudUser = null, syncing = false, syncSoon = null;
+var sb = null, cloudUser = null, syncing = false, syncSoon = null, syncAgain = false;
 
 function cloudConfigured(){ return !!(SUPA.url && SUPA.key && window.supabase); }
 async function cloudInit(){
@@ -1151,10 +1170,10 @@ function scheduleSync(){
   syncSoon = setTimeout(function(){ syncNow(true); }, 4000);
 }
 function pendingCount(){
-  var since = DB.pushedAt || 0, n = 0;
-  Object.keys(DB.loads).forEach(function(k){ (DB.loads[k] || []).forEach(function(x){ if ((x.u || 0) > since) n++; }); });
-  Object.keys(DB.sess || {}).forEach(function(k){ if ((DB.sess[k].u || 0) > since) n++; });
-  Object.keys(DB.check || {}).forEach(function(k){ if ((DB.check[k].u || 0) > since) n++; });
+  var n = 0;
+  Object.keys(DB.loads).forEach(function(k){ (DB.loads[k] || []).forEach(function(x){ if (x.q === 1) n++; }); });
+  Object.keys(DB.sess || {}).forEach(function(k){ if (DB.sess[k].q === 1) n++; });
+  Object.keys(DB.check || {}).forEach(function(k){ if (DB.check[k].q === 1) n++; });
   return n;
 }
 function renderCloud(){
@@ -1172,7 +1191,8 @@ function renderCloud(){
   else { st.textContent = "Synchronisé ✓"; st.className = "stchip ok"; }
 }
 async function syncNow(silent){
-  if (!sb || !cloudUser || syncing) return;
+  if (!sb || !cloudUser) return;
+  if (syncing){ syncAgain = true; return; }   // une synchro en cours : on rejoue juste après, sans perdre la saisie
   if (!navigator.onLine){ if (!silent) flash("cl-msg", "Pas de réseau, ce sera envoyé plus tard"); renderCloud(); return; }
   syncing = true; renderCloud();
   try{
@@ -1186,14 +1206,17 @@ async function syncNow(silent){
   }
   syncing = false; renderCloud();
   if (curSess && steps[idx]) renderCoach(steps[idx].e);
+  if (syncAgain){ syncAgain = false; setTimeout(function(){ syncNow(true); }, 600); }
 }
 async function pushLocal(){
-  // Première synchro : tout l'historique local part, même les entrées d'avant
-  // la synchro (elles n'ont pas d'horodatage).
-  var since = DB.pushedAt || 0, first = !DB.pushedAt, now = Date.now(), rows = [], notes = [];
+  // Ce qui reste a envoyer est marque explicitement (q = 1) au moment de la saisie.
+  // On ne compare JAMAIS l horloge du telephone a celle du serveur : quand le
+  // serveur est en avance, une saisie peut sembler deja envoyee et se perdre.
+  var first = !DB.synced1, rows = [], notes = [], checks = [], refs = [];
   Object.keys(DB.loads).forEach(function(n){
     (DB.loads[n] || []).forEach(function(x){
-      if (!first && (x.u || 0) <= since) return;
+      if (!first && x.q !== 1) return;
+      refs.push(x);
       rows.push({user_id: cloudUser.id, exo: n, day: x.d,
         weight: typeof x.w === "number" ? x.w : null,
         reps: x.rs && x.rs.length ? x.rs : null,
@@ -1203,15 +1226,16 @@ async function pushLocal(){
   });
   Object.keys(DB.sess || {}).forEach(function(k){
     var s = DB.sess[k];
-    if (!first && (s.u || 0) <= since) return;
+    if (!first && s.q !== 1) return;
     var d = k.split("|")[0];
+    refs.push(s);
     notes.push({user_id: cloudUser.id, day: d, session: k.slice(d.length + 1), note: s.note || "", client_at: new Date(s.u || (d + "T12:00:00")).toISOString()});
   });
-  var checks = [];
   Object.keys(DB.check || {}).forEach(function(k){
     var c = DB.check[k];
-    if (!first && (c.u || 0) <= since) return;
+    if (!first && c.q !== 1) return;
     if (!ckFilled(c) && !c.note) return;
+    refs.push(c);
     checks.push({user_id: cloudUser.id, day: k,
       weight: typeof c.wt === "number" ? c.wt : null,
       adductor: typeof c.ad === "number" ? c.ad : null,
@@ -1223,15 +1247,15 @@ async function pushLocal(){
   if (rows.length){ var a = await sb.from("workout_entry").upsert(rows, {onConflict: "user_id,exo,day"}); if (a.error) throw a.error; }
   if (notes.length){ var b = await sb.from("session_note").upsert(notes, {onConflict: "user_id,day,session"}); if (b.error) throw b.error; }
   if (checks.length){ var c2 = await sb.from("checkin").upsert(checks, {onConflict: "user_id,day"}); if (c2.error) throw c2.error; }
-  DB.pushedAt = now;
+  refs.forEach(function(o){ delete o.q; });   // envoye : on retire la marque
+  DB.synced1 = 1;
 }
 async function pullRemote(){
   var since = DB.pulledAt || "1970-01-01T00:00:00Z", maxT = since;
   // Garde-fous : une saisie locale pas encore envoyée n'est JAMAIS écrasée par
   // le serveur, et l'horloge du serveur sert de référence pour « tout est envoyé »
   // (comparer deux horloges différentes faisait croire à un retard permanent).
-  var pushedRef = DB.pushedAt || 0, maxSrv = 0;
-  var dirty = function(o){ return o && (o.u || 0) > pushedRef; };
+  var dirty = function(o){ return o && o.q === 1; };   // saisie pas encore envoyee : elle gagne
   var q = await sb.from("workout_entry").select("exo,day,weight,reps,pain,comment,updated_at").gt("updated_at", since).order("updated_at", {ascending: true}).limit(2000);
   if (q.error) throw q.error;
   (q.data || []).forEach(function(r){
@@ -1239,7 +1263,6 @@ async function pullRemote(){
     var arr = DB.loads[r.exo] || (DB.loads[r.exo] = []), it = null;
     for (var i = arr.length - 1; i >= 0; i--){ if (arr[i].d === r.day){ it = arr[i]; break; } }
     var srv = Date.parse(r.updated_at);
-    if (srv > maxSrv) maxSrv = srv;
     if (dirty(it)) return;                          // saisie locale pas encore envoyée : elle gagne
     if (it && (it.u || 0) >= srv) return;           // le local est plus récent : on le garde
     if (!it){ it = {d: r.day}; arr.push(it); arr.sort(function(a, b){ return a.d.localeCompare(b.d); }); }
@@ -1255,7 +1278,6 @@ async function pullRemote(){
   (s.data || []).forEach(function(r){
     if (r.updated_at > maxT) maxT = r.updated_at;
     var k = r.day + "|" + r.session, cur = DB.sess[k], srv = Date.parse(r.updated_at);
-    if (srv > maxSrv) maxSrv = srv;
     if (dirty(cur)) return;
     if (cur && (cur.u || 0) >= srv) return;
     DB.sess[k] = {note: r.note || "", u: srv};
@@ -1265,7 +1287,6 @@ async function pullRemote(){
   (ck.data || []).forEach(function(r){
     if (r.updated_at > maxT) maxT = r.updated_at;
     var cur = DB.check[r.day], srv = Date.parse(r.updated_at);
-    if (srv > maxSrv) maxSrv = srv;
     if (dirty(cur)) return;
     if (cur && (cur.u || 0) >= srv) return;
     var o = {u: srv};
@@ -1282,7 +1303,7 @@ async function pullRemote(){
   DB.coach = {};
   (c.data || []).forEach(function(r){ if (r.note) DB.coach[r.exo] = {note: r.note, at: r.updated_at}; });
   DB.pulledAt = maxT;
-  if (maxSrv > (DB.pushedAt || 0)) DB.pushedAt = maxSrv;   // ce qui vient du serveur est, par définition, déjà envoyé
+  migrate(DB);
 }
 function renderCoach(e){
   var cb = document.getElementById("coachbox");
@@ -1560,7 +1581,7 @@ function nextStep(){
     var sn = document.getElementById("sess-note");
     sn.value = DB.sess[sk] && DB.sess[sk].note ? DB.sess[sk].note : "";
     sn.addEventListener("input", function(){
-      DB.sess[sk] = {note: sn.value.trim(), u: Date.now()};
+      DB.sess[sk] = {note: sn.value.trim(), u: Date.now(), q: 1};
       saveDB();
     });
     document.getElementById("t-label").textContent = "Fini";
@@ -1641,7 +1662,7 @@ function coachReport(){
     var d = key.split("|")[0];
     if (d >= cutS && DB.sess[key] && DB.sess[key].note) day(d).notes.push(key.slice(d.length + 1) + " : " + DB.sess[key].note);
   });
-  var out = ["POINT COACH — Bloc 2 — export du " + fmtD(todayStr()) + " (28 derniers jours)"];
+  var out = ["POINT COACH — Bloc 3 — export du " + fmtD(todayStr()) + " (28 derniers jours)"];
   var cks = Object.keys(DB.check || {}).filter(function(k){ return k >= cutS && ckFilled(DB.check[k]); }).sort();
   if (cks.length){ out.push("", "POIDS ET DOULEURS (point du lundi)"); cks.forEach(function(k){ out.push("- " + ckLine(k)); }); }
   var ds = Object.keys(days).sort();
