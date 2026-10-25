@@ -1,2 +1,5 @@
 # Clés du coach : jamais dans le dépôt (il est public)
 .env.local
+
+# captures produites par les tests
+ops/*.png
