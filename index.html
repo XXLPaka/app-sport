@@ -744,14 +744,13 @@ var SESSIONS = [
    {n:"Hollow body hold", d:"3 tenues de 25s", sets:3, work:25, m:mus(["abs"],["hip_flexors"]), cue:"Lombaires collées au sol en permanence — genoux pliés si ça décolle"},
    {n:"Sleeper stretch", d:"3x30s, bras de frappe", sets:3, work:30, m:mus(["delts_rear"],[]), cue:"Tension oui, douleur jamais"}
   ]}]},
- {id:"lundi", name:"Lundi — Force bas du corps + tronc", tag:"gym", dur:"≈45 min", desc:"Squat barre, explosivité, anti-rotation",
+ {id:"lundi", name:"Lundi — Force bas du corps + tronc", tag:"gym", dur:"≈45 min", desc:"Superset saut + squat barre, anti-rotation",
   blocks:[
    {label:"Échauffement — 3 min", trans:0, rest:0, exos:[
     {n:"Échauffement", d:"Vélo 2 min + squeeze 3 angles (note le score /10) + glute bridge x10 + 10 rotations thoraciques", sets:1, m:mus([],["quads","glutes","adductors"]), cue:"Court mais réel : température, fessiers, thoracique"}]},
-   {label:"Bloc A — explosivité, frais, repos 1:00", trans:0, rest:60, exos:[
-    {n:"Box jump", d:"4x3 · qualité d'atterrissage", sets:4, prog:"qual", tip:"Monte la hauteur de la box quand les 4x3 sont souples et sans à-coup. Jamais de série longue.", m:mus(["quads","glutes"],["calves"]), cue:"Atterris souple, genoux dans l'axe. Tu redescends en marchant, jamais en sautant"}]},
-   {label:"Bloc B — force, repos plein 2:00", trans:0, rest:120, exos:[
-    {n:"Squat barre", d:"4x5 lourd · descente contrôlée", sets:4, prog:"load", lo:5, hi:5, inc:2.5, load:"départ 40 kg, monte de 2,5 kg quand les 4x5 passent", m:mus(["quads","glutes"],["abs","adductors"]), cue:"Dos neutre, genoux dans l'axe, remontée franche"}]},
+   {label:"Bloc A — superset saut + squat, A1→A2 (20s), repos plein 2:00", trans:20, rest:120, exos:[
+    {n:"Box jump", d:"4x3 · qualité d'atterrissage", sets:4, prog:"qual", tip:"Monte la hauteur de la box quand les 4x3 sont souples et sans à-coup. Jamais de série longue.", m:mus(["quads","glutes"],["calves"]), cue:"Atterris souple, genoux dans l'axe. Tu redescends en marchant, jamais en sautant"},
+    {n:"Squat barre", d:"4x5 lourd · descente contrôlée", sets:4, prog:"load", lo:5, hi:5, inc:2.5, load:"départ 40 kg, monte de 2,5 kg quand les 4x5 passent", m:mus(["quads","glutes"],["abs","adductors"]), cue:"Enchaîné 20s après les sauts. Dos neutre, genoux dans l'axe, remontée franche"}]},
    {label:"Bloc C — fessiers + plaque pubienne, C1→C2 (20s), repos 1:15", trans:20, rest:75, exos:[
     {n:"Hip thrust lourd", d:"4x6-8 lourd", sets:4, prog:"range", lo:6, hi:8, inc:2.5, m:mus(["glutes"],["hamstrings"]), cue:"Menton rentré, fin de mouvement par rétroversion, pas par cambrure"},
     {n:"Copenhagen raises", d:"3x8 par côté, lent", sets:3, prog:"bw", lo:8, hi:8, m:mus(["adductors"],["obliques"]), cue:"Descente 3s contrôlée"}]},
