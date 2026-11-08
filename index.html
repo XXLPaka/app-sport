@@ -774,7 +774,16 @@ var SESSIONS = [
     {n:"Développé couché", d:"4x8-10 haltères", sets:4, prog:"range", lo:8, hi:10, inc:4, load:"haltères, charge totale des deux", m:mus(["chest"],["triceps","delts"]), cue:"Omoplates serrées, pieds ancrés — coudes à 45°"},
     {n:"Tractions volume", d:"4x8-10, loin de l'échec", sets:4, prog:"bw", lo:8, hi:10, m:mus(["lats"],["biceps"]), cue:"Poids de corps, qualité maximale"}]}
   ]},
- {id:"course", name:"Course — 5 km", tag:"run", dur:"≈35 min", desc:"Fractionné VMA, mardi ou jeudi",
+ {id:"course5", name:"Course — 5 km", tag:"run", dur:"≈30 min", desc:"Sortie continue, mardi ou jeudi",
+  blocks:[
+   {label:"Échauffement — 8 min, jamais sauté", trans:0, rest:0, exos:[
+    {n:"Footing d'échauffement", d:"8 min très lent", sets:1, work:480, m:mus([],["quads","calves","hamstrings"]), cue:"Vraiment lent : tu dois pouvoir tenir une conversation"}]},
+   {label:"Les 5 km", trans:0, rest:0, exos:[
+    {n:"5 km continu", d:"5 km d'une traite · chrono au départ", sets:1, m:mus(["quads","calves"],["hamstrings","glutes"]), cue:"Allure régulière du début à la fin. Partir trop vite coûte toujours plus que ça ne rapporte"}]},
+   {label:"Retour au calme", trans:0, rest:0, exos:[
+    {n:"Retour au calme", d:"5 min très lent", sets:1, work:300, m:mus([],[]), cue:"Écris ton temps dans le bilan de séance, c'est lui qui suit ta progression"}]}
+  ]},
+ {id:"course", name:"Course — Fractionné", tag:"run", dur:"≈35 min", desc:"30/30, ce qui fait vraiment baisser le chrono",
   blocks:[
    {label:"Échauffement — 10 min, à faire en entier", trans:0, rest:0, exos:[
     {n:"Footing d'échauffement", d:"8 min très lent + 4 accélérations de 20s", sets:1, work:480, m:mus([],["quads","calves","hamstrings"]), cue:"Vraiment lent : si tu ne peux pas parler en courant, tu vas trop vite"}]},
@@ -824,7 +833,7 @@ var QMAP = {
   "Développé couché":"dumbbell bench press", "Tractions volume":"pull up", "Écarté poulie léger":"standing cable fly",
   "Pallof press":"pallof press", "Chop câble":"cable wood chop high to low",
   "Curl excentrique":"dumbbell biceps curl", "Triceps poulie":"triceps rope pushdown",
-  "30/30 rapide":"fractionne 30 30 VMA course a pied", "Footing d'échauffement":"echauffement avant fractionne course"
+  "30/30 rapide":"fractionne 30 30 VMA course a pied", "5 km continu":"allure reguliere 5 km course", "Footing d'échauffement":"echauffement avant fractionne course"
 };
 
 var FRONT_MUS = {
