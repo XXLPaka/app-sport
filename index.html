@@ -728,22 +728,6 @@ var M = {p:"", s:""};
 function mus(p, s){ return {p: p || [], s: s || []}; }
 
 var SESSIONS = [
- {id:"midi", name:"Midi — Reset lombo-pelvien", tag:"pre", dur:"9 min", desc:"McGill + psoas + fessiers, tous les jours",
-  blocks:[{label:"Enchaînement", trans:0, rest:15, exos:[
-   {n:"Cat-camel", d:"8 reps lentes, amplitude confortable", sets:1, m:mus(["lower_back"],["abs"]), cue:"Respire, aucun forcing"},
-   {n:"Open book", d:"6 par côté, bassin et genoux fixes", sets:1, m:mus(["obliques"],["lower_back"]), cue:"La rotation vient du thoracique"},
-   {n:"Curl-up McGill", d:"6 reps · tenue 8s chacune", sets:2, m:mus(["abs"],[]), cue:"Mains sous les lombaires, un genou plié, tête à peine décollée"},
-   {n:"Side plank", d:"20s par côté", sets:2, work:20, perSide:true, m:mus(["obliques"],["delts"]), cue:"Aligné épaule-hanche-cheville, genoux pliés si besoin"},
-   {n:"Bird dog", d:"6 par côté · tenue 3s", sets:2, m:mus(["lower_back","glutes"],["abs"]), cue:"Bassin immobile, imagine un verre d'eau posé dessus"},
-   {n:"Stretch psoas", d:"45s par côté, fente au sol", sets:1, work:45, perSide:true, m:mus(["hip_flexors"],[]), cue:"Rétroversion active : boucle de ceinture vers le menton"},
-   {n:"Glute bridge", d:"12 reps, serre fort 2s en haut", sets:1, m:mus(["glutes"],["hamstrings"]), cue:"Pousse dans les talons"}
-  ]}]},
- {id:"soir", name:"Soir — Routine", tag:"pre", dur:"10 min", desc:"Quad + anti-cambrure + épaule",
-  blocks:[{label:"Enchaînement", trans:0, rest:30, exos:[
-   {n:"Spanish squat isométrique", d:"5 tenues de 45s, douleur ≤3/10", sets:5, work:45, m:mus(["quads"],["glutes"]), cue:"Sangle derrière les genoux, tibias verticaux"},
-   {n:"Hollow body hold", d:"3 tenues de 25s", sets:3, work:25, m:mus(["abs"],["hip_flexors"]), cue:"Lombaires collées au sol en permanence — genoux pliés si ça décolle"},
-   {n:"Sleeper stretch", d:"3x30s, bras de frappe", sets:3, work:30, m:mus(["delts_rear"],[]), cue:"Tension oui, douleur jamais"}
-  ]}]},
  {id:"lundi", name:"Lundi — Force bas du corps + tronc", tag:"gym", dur:"≈40 min", desc:"Superset saut + squat barre, fessiers, tronc",
   blocks:[
    {label:"Échauffement — 3 min", trans:0, rest:0, exos:[
@@ -789,8 +773,21 @@ var SESSIONS = [
    {label:"Bloc C — poussée/tirage · repos 1:15", trans:0, rest:75, exos:[
     {n:"Développé couché", d:"4x8-10 haltères", sets:4, prog:"range", lo:8, hi:10, inc:4, load:"haltères, charge totale des deux", m:mus(["chest"],["triceps","delts"]), cue:"Omoplates serrées, pieds ancrés — coudes à 45°"},
     {n:"Tractions volume", d:"4x8-10, loin de l'échec", sets:4, prog:"bw", lo:8, hi:10, m:mus(["lats"],["biceps"]), cue:"Poids de corps, qualité maximale"}]}
+  ]},
+ {id:"course", name:"Course — 5 km", tag:"run", dur:"≈35 min", desc:"Fractionné VMA, mardi ou jeudi",
+  blocks:[
+   {label:"Échauffement — 10 min, à faire en entier", trans:0, rest:0, exos:[
+    {n:"Footing d'échauffement", d:"8 min très lent + 4 accélérations de 20s", sets:1, work:480, m:mus([],["quads","calves","hamstrings"]), cue:"Vraiment lent : si tu ne peux pas parler en courant, tu vas trop vite"}]},
+   {label:"Série 1 — 8 x 30/30", trans:0, rest:30, exos:[
+    {n:"30/30 rapide", d:"30s vite / 30s trot · 8 fois", sets:8, work:30, m:mus(["quads","calves"],["hamstrings","glutes"]), cue:"Vite ne veut pas dire sprint : c'est l'allure que tu tiendrais 6 min, pas 30s"}]},
+   {label:"Récupération entre les séries", trans:0, rest:0, exos:[
+    {n:"Récupération 3 min", d:"Trot très lent ou marche", sets:1, work:180, m:mus([],[]), cue:"Laisse le souffle redescendre complètement"}]},
+   {label:"Série 2 — 8 x 30/30", trans:0, rest:30, exos:[
+    {n:"30/30 rapide", d:"30s vite / 30s trot · 8 fois", sets:8, work:30, m:mus(["quads","calves"],["hamstrings","glutes"]), cue:"Même allure qu'en série 1. Si tu ralentis, tu arrêtes : la séance est finie"}]},
+   {label:"Retour au calme", trans:0, rest:0, exos:[
+    {n:"Retour au calme", d:"5 min très lent", sets:1, work:300, m:mus([],[]), cue:"Note ton ressenti et, si tu as chronométré un 5 km, écris le temps dans le bilan de séance"}]}
   ]}
-];;;
+];;;;
 
 var FIGMAP = {
   "Cat-camel":"catcamel", "Open book":"openbook", "Curl-up McGill":"curlup", "Side plank":"sideplank",
@@ -826,7 +823,8 @@ var QMAP = {
   "Med ball rotation":"rotational medicine ball throw against wall",
   "Développé couché":"dumbbell bench press", "Tractions volume":"pull up", "Écarté poulie léger":"standing cable fly",
   "Pallof press":"pallof press", "Chop câble":"cable wood chop high to low",
-  "Curl excentrique":"dumbbell biceps curl", "Triceps poulie":"triceps rope pushdown"
+  "Curl excentrique":"dumbbell biceps curl", "Triceps poulie":"triceps rope pushdown",
+  "30/30 rapide":"fractionne 30 30 VMA course a pied", "Footing d'échauffement":"echauffement avant fractionne course"
 };
 
 var FRONT_MUS = {
