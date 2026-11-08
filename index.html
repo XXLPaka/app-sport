@@ -728,6 +728,12 @@ var M = {p:"", s:""};
 function mus(p, s){ return {p: p || [], s: s || []}; }
 
 var SESSIONS = [
+ {id:"soir", name:"Soir — 5 min mobilité", tag:"pre", dur:"5 min", desc:"Quand tu peux, pas tous les jours",
+  blocks:[{label:"Enchaînement", trans:0, rest:10, exos:[
+   {n:"Open book", d:"6 par côté, bassin et genoux fixes", sets:1, m:mus(["obliques"],["lower_back"]), cue:"La rotation vient du thoracique — c'est elle qui manque à ton revers"},
+   {n:"Stretch psoas", d:"45s par côté, fente au sol", sets:1, work:45, perSide:true, m:mus(["hip_flexors"],[]), cue:"Rétroversion active : boucle de ceinture vers le menton"},
+   {n:"Sleeper stretch", d:"2x30s, bras de frappe", sets:2, work:30, m:mus(["delts_rear"],[]), cue:"Tension oui, douleur jamais. C'est ce qui garde ton épaule libre au service"}
+  ]}]},
  {id:"lundi", name:"Lundi — Force bas du corps + tronc", tag:"gym", dur:"≈40 min", desc:"Superset saut + squat barre, fessiers, tronc",
   blocks:[
    {label:"Échauffement — 3 min", trans:0, rest:0, exos:[
