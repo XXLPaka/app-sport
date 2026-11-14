@@ -106,6 +106,7 @@ const srv = http.createServer((req, res) => {
   console.log("\n[3] Salle sans reseau puis rattrapage");
   await ctx.setOffline(true);
   await page.evaluate(() => window.dispatchEvent(new Event("offline")));
+  await page.evaluate(i => { openList(SESSIONS.find(s => s.id === "lundi")); startAt(i); }, info.idx); // sans transition, l app a deja enchaine sur l exo suivant
   await page.click("#rp-plus");
   await page.waitForTimeout(1500);
   check("l'app signale le retard", (await page.textContent("#cl-state")).toLowerCase().includes("hors ligne"), await page.textContent("#cl-state"));

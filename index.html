@@ -734,13 +734,13 @@ var SESSIONS = [
    {n:"Stretch psoas", d:"45s par côté, fente au sol", sets:1, work:45, perSide:true, m:mus(["hip_flexors"],[]), cue:"Rétroversion active : boucle de ceinture vers le menton"},
    {n:"Sleeper stretch", d:"2x30s, bras de frappe", sets:2, work:30, m:mus(["delts_rear"],[]), cue:"Tension oui, douleur jamais. C'est ce qui garde ton épaule libre au service"}
   ]}]},
- {id:"lundi", name:"Lundi — Force bas du corps + tronc", tag:"gym", dur:"≈40 min", desc:"Superset saut + squat barre, fessiers, tronc",
+ {id:"lundi", name:"Lundi — Force bas du corps + tronc", tag:"gym", dur:"≈40 min", desc:"Squat lourd puis saut, fessiers, tronc",
   blocks:[
    {label:"Échauffement — 3 min", trans:0, rest:0, exos:[
     {n:"Échauffement", d:"Vélo 2 min + squeeze 3 angles (note le score /10) + glute bridge x10 + 10 rotations thoraciques", sets:1, m:mus([],["quads","glutes","adductors"]), cue:"Court mais réel : température, fessiers, thoracique"}]},
-   {label:"Bloc A — superset saut + squat · repos plein 2:00 après la paire", trans:0, rest:120, exos:[
-    {n:"Box jump", d:"4x3 · qualité d'atterrissage", sets:4, prog:"qual", tip:"Monte la hauteur de la box quand les 4x3 sont souples et sans à-coup. Jamais de série longue.", m:mus(["quads","glutes"],["calves"]), cue:"Atterris souple, genoux dans l'axe. Tu redescends en marchant, jamais en sautant"},
-    {n:"Squat barre", d:"4x5 lourd · descente contrôlée", sets:4, prog:"load", lo:5, hi:5, inc:2.5, load:"monte de 2,5 kg quand les 4x5 passent", m:mus(["quads","glutes"],["abs","adductors"]), cue:"Enchaîné après les sauts. Dos neutre, genoux dans l'axe, remontée franche"}]},
+   {label:"Bloc A — complexe : squat lourd puis saut · repos plein 2:00 après la paire", trans:0, rest:120, exos:[
+    {n:"Squat barre", d:"4x5 lourd · descente contrôlée", sets:4, prog:"load", lo:5, hi:5, inc:2.5, load:"monte de 2,5 kg quand les 4x5 passent", m:mus(["quads","glutes"],["abs","adductors"]), cue:"Le lourd en premier : c'est lui qui prépare le saut. Dos neutre, genoux dans l'axe, remontée franche"},
+    {n:"Box jump", d:"4x3 · explosif, juste après le squat", sets:4, prog:"qual", tip:"Monte la hauteur de la box quand les 4x3 sont souples et sans à-coup. Jamais de série longue.", m:mus(["quads","glutes"],["calves"]), cue:"30 à 60 s après ta série de squat, pas plus. Cherche la hauteur, atterris souple, genoux dans l'axe. Tu redescends en marchant"}]},
    {label:"Bloc B — fessiers + plaque pubienne · repos 1:15", trans:0, rest:75, exos:[
     {n:"Hip thrust lourd", d:"4x6-8 lourd", sets:4, prog:"range", lo:6, hi:8, inc:2.5, m:mus(["glutes"],["hamstrings"]), cue:"Menton rentré, fin de mouvement par rétroversion, pas par cambrure"},
     {n:"Copenhagen raises", d:"3x8 par côté, lent", sets:3, prog:"bw", lo:8, hi:8, m:mus(["adductors"],["obliques"]), cue:"Descente 3s contrôlée"}]},
@@ -917,7 +917,7 @@ function buildSteps(sess){
     for (var r = 1; r <= maxSets; r++){
       var round = b.exos.filter(function(e){ return (e.sets || 1) >= r; });
       round.forEach(function(e, i){
-        steps.push({e:e, b:b, set:r, rest: i === round.length - 1 ? (b.rest || 0) : (b.trans || 15)});
+        steps.push({e:e, b:b, set:r, rest: i === round.length - 1 ? (b.rest || 0) : (b.trans == null ? 15 : b.trans)});
       });
     }
   });
