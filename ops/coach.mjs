@@ -50,7 +50,8 @@ async function report(days = 28) {
   const cut = new Date(Date.now() - days * 864e5).toISOString().slice(0, 10);
   const rows = await rest(`workout_entry?day=gte.${cut}&select=exo,day,weight,reps,pain,comment&order=day.asc`);
   const notes = await rest(`session_note?day=gte.${cut}&select=day,session,note&order=day.asc`);
-  const cks = await rest(`checkin?day=gte.${cut}&select=day,weight,adductor,lumbar,quad,wrist,note&order=day.asc`);
+  const cks = await rest(`checkin?day=gte.${cut}&select=day,weight,adductor,lumbar,quad,wrist,note,deload&order=day.asc`);
+  const meals = await rest(`meal?day=gte.${cut}&select=day,lunch,dinner,extras&order=day.asc`);
   if (cks.length) {
     console.log("POIDS ET DOULEURS (point du lundi)");
     for (const c of cks) {
@@ -58,18 +59,23 @@ async function report(days = 28) {
       if (c.weight !== null) b.push(fmtW(c.weight) + " kg");
       for (const [k, lbl] of [["adductor", "add"], ["lumbar", "lomb"], ["quad", "quad"], ["wrist", "poignet"]])
         if (c[k] !== null) b.push(`${lbl} ${c[k]}`);
-      console.log(`- ${fmtD(c.day)} : ${b.join(" · ") || "vide"}${c.note ? " — " + c.note : ""}`);
+      console.log(`- ${fmtD(c.day)} : ${b.join(" · ") || "vide"}${c.deload === 1 ? " · DÉCHARGE" : ""}${c.note ? " — " + c.note : ""}`);
     }
     // Tendance : utile pour juger la prise de masse et les tractions.
     const w = cks.filter((c) => c.weight !== null);
     if (w.length > 1) {
       const d = Number(w.at(-1).weight) - Number(w[0].weight);
-      console.log(`  → ${d >= 0 ? "+" : ""}${fmtW(d.toFixed(1))} kg sur ${w.length} pesées\n`);
+      const sem = Math.max(1, Math.round((Date.parse(w.at(-1).day) - Date.parse(w[0].day)) / 6048e5));
+      const parSem = d / sem;
+      const cible = parSem < 0.25 ? "  (cible prise de masse : +0,25 à +0,5 kg/sem)" : "";
+      console.log(`  → ${d >= 0 ? "+" : ""}${fmtW(d.toFixed(1))} kg sur ${w.length} pesées, soit ${parSem >= 0 ? "+" : ""}${fmtW(parSem.toFixed(2))} kg/semaine${cible}\n`);
     } else console.log("");
   }
   const byDay = new Map();
   for (const r of rows) (byDay.get(r.day) || byDay.set(r.day, { ex: [], notes: [] }).get(r.day)).ex.push(r);
   for (const n of notes) if (n.note) (byDay.get(n.day) || byDay.set(n.day, { ex: [], notes: [] }).get(n.day)).notes.push(n);
+  for (const m of meals) if (m.lunch || m.dinner || m.extras)
+    (byDay.get(m.day) || byDay.set(m.day, { ex: [], notes: [] }).get(m.day)).meal = m;
   const days_ = [...byDay.keys()].sort();
   if (!days_.length) return console.log(`Aucune séance sur ${days} jours.`);
   console.log(`POINT COACH — ${days} derniers jours — ${rows.length} exercices enregistrés\n`);
@@ -83,6 +89,12 @@ async function report(days = 28) {
       console.log(`- ${r.exo}${bits.length ? " : " + bits.join(" · ") : ""}${r.comment ? ` — « ${r.comment} »` : ""}`);
     }
     for (const n of byDay.get(d).notes) console.log(`> Bilan ${n.session} : ${n.note}`);
+    const m = byDay.get(d).meal;
+    if (m) {
+      if (m.lunch) console.log(`> Midi : ${m.lunch}`);
+      if (m.dinner) console.log(`> Soir : ${m.dinner}`);
+      if (m.extras) console.log(`> Reste : ${m.extras}`);
+    }
     console.log("");
   }
 }
