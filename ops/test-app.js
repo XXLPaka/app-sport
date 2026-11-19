@@ -125,6 +125,51 @@ const srv = http.createServer((req, res) => {
   check("texte de la reco", (await page.textContent("#recobox")).includes("62,5 kg"), await page.textContent("#recobox"));
   await page.screenshot({ path: path.join(OUT, "apercu-reco.png"), fullPage: true });
 
+  console.log("\n[6] Repas dictes");
+  await page.evaluate(() => { localStorage.removeItem("bloc2-loads"); });
+  await page.reload();
+  await page.fill("#ml-m", "150 g de pates crues, 200 g de boeuf hache"); await page.dispatchEvent("#ml-m", "input");
+  await page.fill("#ml-r", "shaker de whey apres la seance"); await page.dispatchEvent("#ml-r", "input");
+  await page.waitForTimeout(900);
+  check("etat : 2 / 3 note", (await page.textContent("#ml-state")).includes("2 / 3"), await page.textContent("#ml-state"));
+  await page.reload();
+  const ml = await page.evaluate(() => ({ db: DB.meals[todayStr()], champ: document.getElementById("ml-m").value, rep: coachReport() }));
+  check("repas conserves apres rechargement", !!(ml.db && /boeuf hache/.test(ml.db.m) && /whey/.test(ml.db.r)), ml.db);
+  check("champ re-rempli a la reouverture", /pates crues/.test(ml.champ), ml.champ);
+  check("repas repris dans le point coach", /> Midi : 150 g de pates/.test(ml.rep));
+
+  console.log("\n[7] Semaine de decharge");
+  const dl = await page.evaluate(() => {
+    const find = n => { let r = null; SESSIONS.forEach(s => s.blocks.forEach(b => b.exos.forEach(x => { if (x.n === n) r = x; }))); return r; };
+    const e = find("Squat barre");
+    DB.check = {}; DB.loads["Squat barre"] = [{ d: "2026-10-22", w: 70, rs: [5, 5, 5, 5] }];
+    const avant = advise(e);
+    toggleDeload();
+    const pendant = advise(e), barre = !document.getElementById("dl-bar").classList.contains("hidden");
+    const btn = document.getElementById("dl-btn").textContent;
+    toggleDeload();
+    return { avant: avant.t, k1: avant.k, pendant: pendant.t, sub: pendant.s, k2: pendant.k, barre, btn,
+             apres: advise(e).t, marque: DB.check[weekKey()].dl };
+  });
+  check("hors decharge, l app propose de monter", dl.k1 === "up" && /72,5 kg/.test(dl.avant), dl.avant);
+  check("en decharge, charge a 70 %", dl.k2 === "hold" && /49 kg/.test(dl.pendant), dl.pendant);
+  check("en decharge, moitie des series", /2 series au lieu de 4/.test(dl.sub.normalize("NFD").replace(/[̀-ͯ]/g, "")), dl.sub);
+  check("bandeau de decharge affiche", dl.barre);
+  check("bouton propose d annuler", /Annuler/.test(dl.btn), dl.btn);
+  check("annulation : on remonte a nouveau", /72,5 kg/.test(dl.apres) && dl.marque === 0, dl.apres);
+
+  const auto = await page.evaluate(() => {
+    const k = weekKey();
+    DB.check = {}; DB.check[weekAdd(k, -2)] = { dl: 1 };
+    const deux = ensureDeload();
+    DB.check = {}; DB.check[weekAdd(k, -5)] = { dl: 1 };
+    const cinq = ensureDeload();
+    return { deux, cinq, every: DL_EVERY };
+  });
+  check("2 semaines apres une decharge : semaine normale", auto.deux === false, auto.deux);
+  check("5 semaines apres une decharge : decharge automatique", auto.cinq === true, auto.cinq);
+  check("rythme de 5 semaines", auto.every === 5, auto.every);
+
   console.log("\nErreurs JS console :", errors.length ? errors : "aucune");
   if (errors.length) fails++;
   await browser.close(); srv.close();

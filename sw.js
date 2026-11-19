@@ -1,4 +1,4 @@
-const CACHE = "bloc2-v5";
+const CACHE = "bloc2-v6";
 // Seuls ces domaines sont mis en cache hors ligne. Tout le reste (API Supabase
 // en particulier) doit passer par le reseau : une reponse d'API mise en cache
 // renverrait des donnees perimees.

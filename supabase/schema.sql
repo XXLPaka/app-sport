@@ -62,6 +62,26 @@ drop trigger if exists checkin_touch on public.checkin;
 create trigger checkin_touch before insert or update on public.checkin
   for each row execute function public.touch_updated_at();
 
+-- Semaine de décharge : 1 = décharge, 0 = semaine normale.
+-- Posée automatiquement une semaine sur cinq, ou à la main depuis l'app.
+alter table public.checkin add column if not exists deload smallint;
+
+-- ── Repas dictés : une ligne par jour, trois champs libres ──────────────────
+create table if not exists public.meal (
+  user_id    uuid not null references auth.users(id) on delete cascade,
+  day        date not null,
+  lunch      text,             -- midi
+  dinner     text,             -- soir
+  extras     text,             -- petit-déjeuner, collations, boissons
+  client_at  timestamptz,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, day)
+);
+create index if not exists meal_sync_idx on public.meal (user_id, updated_at);
+drop trigger if exists meal_touch on public.meal;
+create trigger meal_touch before insert or update on public.meal
+  for each row execute function public.touch_updated_at();
+
 -- ── Consignes du coach : écrites côté coach, lues par l'app ─────────────────
 create table if not exists public.coach_note (
   user_id    uuid not null references auth.users(id) on delete cascade,
@@ -102,3 +122,9 @@ create policy coach_note_read on public.coach_note for select to authenticated
 grant select, insert, update, delete on public.workout_entry to authenticated;
 grant select, insert, update, delete on public.session_note  to authenticated;
 grant select                          on public.coach_note    to authenticated;
+
+alter table public.meal enable row level security;
+drop policy if exists meal_own on public.meal;
+create policy meal_own on public.meal for all to authenticated
+  using (user_id = auth.uid()) with check (user_id = auth.uid());
+grant select, insert, update, delete on public.meal to authenticated;

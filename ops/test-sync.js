@@ -135,6 +135,21 @@ const srv = http.createServer((req, res) => {
     return r.length === 1 ? r : null;
   });
   check("point de la semaine arrive", !!(ck && ck[0].weight == 77.5 && ck[0].lumbar === 2), ck && ck[0]);
+
+  await page.fill("#ml-m", "Test e2e midi : 150 g de riz"); await page.dispatchEvent("#ml-m", "input");
+  await page.click("#dl-btn");
+  await page.click("#cl-sync");
+  const mrow = await until(async () => {
+    const r = await rest(mine("meal?select=day,lunch,dinner"));
+    return r.length === 1 && r[0].lunch ? r : null;
+  });
+  check("repas dicte arrive sur le serveur", !!(mrow && /150 g de riz/.test(mrow[0].lunch)), mrow && mrow[0]);
+  const dlrow = await until(async () => {
+    const r = await rest(mine("checkin?select=day,deload"));
+    return r.length === 1 && r[0].deload === 1 ? r : null;
+  });
+  check("semaine de decharge marquee sur le serveur", !!dlrow, dlrow && dlrow[0]);
+  await waitSynced(page);
   await page.evaluate(i => { openList(SESSIONS.find(s => s.id === "lundi")); startAt(i); }, info.idx);
   check("consigne du coach affichee dans l'exo", (await page.textContent("#coachbox")).includes("CONSIGNE DE TEST"), await page.textContent("#coachbox"));
 
@@ -151,6 +166,15 @@ const srv = http.createServer((req, res) => {
   check("seance recuperee", !!(back.e && back.e[0].w === 45 && back.e[0].c === "Test e2e"), back.e);
   check("historique migre recupere", !!(back.rdl && back.rdl[0].w === 40), back.rdl);
   check("point de la semaine recupere", !!(back.ck && back.ck.wt === 77.5), back.ck);
+  const back2 = await p2.evaluate(() => ({
+    meal: DB.meals[todayStr()],
+    dl: DB.check[weekKey()] && DB.check[weekKey()].dl,
+    barre: !document.getElementById("dl-bar").classList.contains("hidden"),
+    champ: document.getElementById("ml-m").value,
+  }));
+  check("repas recupere sur le nouveau telephone", !!(back2.meal && /150 g de riz/.test(back2.meal.m)), back2.meal);
+  check("champ repas pre-rempli", /150 g de riz/.test(back2.champ), back2.champ);
+  check("decharge recuperee et bandeau affiche", back2.dl === 1 && back2.barre, back2);
 
   console.log("\nErreurs JS console :", errors.length ? errors : "aucune");
   if (errors.length) fails++;
