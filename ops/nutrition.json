@@ -1,0 +1,112 @@
+{
+  "_lisez_moi": "Table de référence pour convertir les repas dictés en calories et protéines. Valeurs pour 100 g sauf si 'par' vaut 'piece'. Source : ordres de grandeur CIQUAL / étiquettes. Marge réelle 5 à 10 %, ce qui est sans importance : ce qui pilote, c'est la balance du lundi, pas la deuxième décimale.",
+
+  "cible": {
+    "poids_actuel": 77.2,
+    "poids_vise": 82,
+    "proteines_g_par_kg": [1.6, 2.0],
+    "prise_kg_par_semaine": [0.25, 0.5],
+    "prise_kg_par_semaine_cible": 0.35,
+    "kcal_par_kg_pris": 7000,
+    "_note_kcal_par_kg": "7700 est le chiffre pour de la graisse pure, 1800 pour du muscle. 7000 est un compromis honnête pour une prise mixte. Il sert surtout à calculer l'AJUSTEMENT (écart entre prise réelle et prise visée), qui lui est robuste."
+  },
+
+  "conversions": {
+    "pates_cru_vers_cuit": 2.4,
+    "riz_cru_vers_cuit": 2.8,
+    "lentilles_cru_vers_cuit": 2.4,
+    "semoule_cru_vers_cuit": 2.5,
+    "cuillere_soupe_huile_g": 10,
+    "cuillere_cafe_huile_g": 5,
+    "cuillere_soupe_ml": 15,
+    "cuillere_cafe_ml": 5,
+    "oeuf_moyen_g": 50,
+    "_note": "Les féculents sont toujours plus fiables pesés CRUS. Si le poids est donné cuit, diviser par le facteur ci-dessus avant d'utiliser la ligne 'cru'."
+  },
+
+  "contenants": {
+    "_a_remplir": "Volumes mesurés à l'eau (1 g = 1 ml), au niveau réellement utilisé. Aymeric les fournit le 20/11/2026.",
+    "bol_pates": null,
+    "bol_petit_dejeuner": null,
+    "verre": null,
+    "mug": null,
+    "louche": null,
+    "cuillere_soupe": null,
+    "portion_habituelle_pates_crues_g": null,
+    "portion_habituelle_riz_cru_g": null
+  },
+
+  "aliments": {
+    "pates_crues":        {"nom": "Pâtes crues",              "famille": "feculent", "kcal": 360, "p": 12.0, "g": 71.0, "l": 1.5},
+    "pates_cuites":       {"nom": "Pâtes cuites",             "famille": "feculent", "kcal": 150, "p": 5.0,  "g": 30.0, "l": 0.6},
+    "riz_cru":            {"nom": "Riz cru",                  "famille": "feculent", "kcal": 350, "p": 7.0,  "g": 78.0, "l": 0.9},
+    "riz_cuit":           {"nom": "Riz cuit",                 "famille": "feculent", "kcal": 125, "p": 2.5,  "g": 28.0, "l": 0.3},
+    "semoule_crue":       {"nom": "Semoule crue",             "famille": "feculent", "kcal": 350, "p": 12.0, "g": 72.0, "l": 1.5},
+    "quinoa_cru":         {"nom": "Quinoa cru",               "famille": "feculent", "kcal": 368, "p": 14.0, "g": 58.0, "l": 6.0},
+    "lentilles_crues":    {"nom": "Lentilles crues",          "famille": "feculent", "kcal": 335, "p": 24.0, "g": 50.0, "l": 1.5},
+    "pois_chiches_cuits": {"nom": "Pois chiches cuits",       "famille": "feculent", "kcal": 140, "p": 8.0,  "g": 21.0, "l": 2.5},
+    "pomme_de_terre":     {"nom": "Pomme de terre crue",      "famille": "feculent", "kcal": 80,  "p": 2.0,  "g": 17.0, "l": 0.1},
+    "frites":             {"nom": "Frites",                   "famille": "feculent", "kcal": 290, "p": 3.5,  "g": 36.0, "l": 14.0},
+    "pain_baguette":      {"nom": "Pain baguette",            "famille": "feculent", "kcal": 270, "p": 9.0,  "g": 55.0, "l": 1.0},
+    "pain_complet":       {"nom": "Pain complet",             "famille": "feculent", "kcal": 250, "p": 9.0,  "g": 45.0, "l": 2.0},
+    "flocons_avoine":     {"nom": "Flocons d'avoine",         "famille": "feculent", "kcal": 380, "p": 13.0, "g": 60.0, "l": 7.0},
+    "cereales_petitdej":  {"nom": "Céréales petit-déjeuner",  "famille": "feculent", "kcal": 380, "p": 8.0,  "g": 75.0, "l": 5.0},
+
+    "poulet_blanc":       {"nom": "Blanc de poulet cru",      "famille": "proteine", "kcal": 110, "p": 23.0, "g": 0.0,  "l": 1.5},
+    "poulet_cuisse":      {"nom": "Cuisse de poulet",         "famille": "proteine", "kcal": 160, "p": 19.0, "g": 0.0,  "l": 9.0},
+    "dinde":              {"nom": "Escalope de dinde",        "famille": "proteine", "kcal": 110, "p": 24.0, "g": 0.0,  "l": 1.5},
+    "boeuf_hache_5":      {"nom": "Boeuf haché 5 %",          "famille": "proteine", "kcal": 125, "p": 21.0, "g": 0.0,  "l": 5.0},
+    "boeuf_hache_15":     {"nom": "Boeuf haché 15 %",         "famille": "proteine", "kcal": 215, "p": 19.0, "g": 0.0,  "l": 15.0},
+    "boeuf_hache_20":     {"nom": "Boeuf haché 20 %",         "famille": "proteine", "kcal": 250, "p": 18.0, "g": 0.0,  "l": 20.0},
+    "steak":              {"nom": "Steak, bavette",           "famille": "proteine", "kcal": 150, "p": 26.0, "g": 0.0,  "l": 5.0},
+    "porc_filet":         {"nom": "Filet de porc",            "famille": "proteine", "kcal": 140, "p": 21.0, "g": 0.0,  "l": 6.0},
+    "jambon_blanc":       {"nom": "Jambon blanc",             "famille": "proteine", "kcal": 110, "p": 19.0, "g": 1.0,  "l": 3.0},
+    "saucisse":           {"nom": "Saucisse",                 "famille": "proteine", "kcal": 300, "p": 14.0, "g": 1.0,  "l": 27.0},
+    "saumon":             {"nom": "Saumon",                   "famille": "proteine", "kcal": 200, "p": 20.0, "g": 13.0, "l": 13.0},
+    "cabillaud":          {"nom": "Cabillaud, poisson blanc", "famille": "proteine", "kcal": 80,  "p": 18.0, "g": 0.0,  "l": 0.7},
+    "thon_naturel":       {"nom": "Thon en boîte au naturel", "famille": "proteine", "kcal": 110, "p": 26.0, "g": 0.0,  "l": 1.0},
+    "crevettes":          {"nom": "Crevettes",                "famille": "proteine", "kcal": 100, "p": 21.0, "g": 0.0,  "l": 1.5},
+    "oeuf":               {"nom": "Oeuf moyen",               "famille": "proteine", "par": "piece", "kcal": 70, "p": 6.3, "g": 0.3, "l": 5.0},
+    "whey_nutrimuscle":   {"nom": "Whey isolate (dose 30 g)", "famille": "proteine", "par": "piece", "kcal": 111, "p": 24.4, "g": 2.2, "l": 0.4},
+
+    "lait_entier":        {"nom": "Lait entier",              "famille": "laitier",  "kcal": 64,  "p": 3.2,  "g": 4.8,  "l": 3.6},
+    "lait_demi_ecreme":   {"nom": "Lait demi-écrémé",         "famille": "laitier",  "kcal": 47,  "p": 3.3,  "g": 4.8,  "l": 1.6},
+    "yaourt_nature":      {"nom": "Yaourt nature",            "famille": "laitier",  "kcal": 60,  "p": 4.0,  "g": 5.0,  "l": 3.0},
+    "fromage_blanc_3":    {"nom": "Fromage blanc 3 %",        "famille": "laitier",  "kcal": 75,  "p": 7.5,  "g": 4.0,  "l": 3.0},
+    "skyr":               {"nom": "Skyr",                     "famille": "laitier",  "kcal": 60,  "p": 11.0, "g": 4.0,  "l": 0.2},
+    "emmental":           {"nom": "Emmental, gruyère râpé",   "famille": "laitier",  "kcal": 370, "p": 28.0, "g": 0.0,  "l": 29.0},
+    "comte":              {"nom": "Comté, fromage à pâte dure","famille": "laitier", "kcal": 410, "p": 27.0, "g": 0.0,  "l": 34.0},
+    "mozzarella":         {"nom": "Mozzarella",               "famille": "laitier",  "kcal": 250, "p": 18.0, "g": 1.0,  "l": 19.0},
+    "creme_30":           {"nom": "Crème fraîche 30 %",       "famille": "laitier",  "kcal": 290, "p": 2.4,  "g": 3.0,  "l": 30.0},
+    "beurre":             {"nom": "Beurre",                   "famille": "graisse",  "kcal": 750, "p": 0.7,  "g": 0.6,  "l": 83.0},
+
+    "huile":              {"nom": "Huile (toutes)",           "famille": "graisse",  "kcal": 900, "p": 0.0,  "g": 0.0,  "l": 100.0},
+    "amandes":            {"nom": "Amandes, noix",            "famille": "graisse",  "kcal": 600, "p": 20.0, "g": 8.0,  "l": 53.0},
+    "avocat":             {"nom": "Avocat",                   "famille": "graisse",  "kcal": 165, "p": 2.0,  "g": 2.0,  "l": 15.0},
+    "mayonnaise":         {"nom": "Mayonnaise",               "famille": "graisse",  "kcal": 700, "p": 1.0,  "g": 2.0,  "l": 75.0},
+
+    "legumes_verts":      {"nom": "Légumes verts (courgette, haricot, brocoli)", "famille": "legume", "kcal": 30, "p": 2.0, "g": 4.0, "l": 0.3},
+    "tomate":             {"nom": "Tomate fraîche",           "famille": "legume",   "kcal": 18,  "p": 0.8,  "g": 3.0,  "l": 0.2},
+    "tomates_concassees": {"nom": "Tomates concassées, boîte","famille": "legume",   "kcal": 30,  "p": 1.3,  "g": 5.0,  "l": 0.2},
+    "salade":             {"nom": "Salade verte",             "famille": "legume",   "kcal": 15,  "p": 1.2,  "g": 1.5,  "l": 0.2},
+    "carotte":            {"nom": "Carotte",                  "famille": "legume",   "kcal": 35,  "p": 0.8,  "g": 7.0,  "l": 0.2},
+    "champignons":        {"nom": "Champignons",              "famille": "legume",   "kcal": 25,  "p": 2.5,  "g": 2.0,  "l": 0.3},
+    "oignon":             {"nom": "Oignon",                   "famille": "legume",   "kcal": 40,  "p": 1.2,  "g": 8.0,  "l": 0.2},
+
+    "banane":             {"nom": "Banane",                   "famille": "fruit",    "par": "piece", "kcal": 95, "p": 1.2, "g": 21.0, "l": 0.3},
+    "pomme":              {"nom": "Pomme",                    "famille": "fruit",    "par": "piece", "kcal": 75, "p": 0.4, "g": 18.0, "l": 0.2},
+    "orange":             {"nom": "Orange",                   "famille": "fruit",    "par": "piece", "kcal": 65, "p": 1.2, "g": 14.0, "l": 0.2},
+    "fruits_divers":      {"nom": "Fruits frais (100 g)",     "famille": "fruit",    "kcal": 55,  "p": 0.8,  "g": 12.0, "l": 0.2},
+    "jus_fruit":          {"nom": "Jus de fruit",             "famille": "boisson",  "kcal": 45,  "p": 0.5,  "g": 10.0, "l": 0.1},
+
+    "biere":              {"nom": "Bière (33 cl)",            "famille": "boisson",  "par": "piece", "kcal": 140, "p": 1.5, "g": 11.0, "l": 0.0},
+    "vin":                {"nom": "Vin (15 cl)",              "famille": "boisson",  "par": "piece", "kcal": 120, "p": 0.1, "g": 3.0,  "l": 0.0},
+    "soda":               {"nom": "Soda sucré",               "famille": "boisson",  "kcal": 40,  "p": 0.0,  "g": 10.0, "l": 0.0},
+
+    "chocolat_noir":      {"nom": "Chocolat noir",            "famille": "extra",    "kcal": 550, "p": 7.0,  "g": 35.0, "l": 40.0},
+    "biscuits":           {"nom": "Biscuits, gâteaux",        "famille": "extra",    "kcal": 460, "p": 6.0,  "g": 65.0, "l": 19.0},
+    "chips":              {"nom": "Chips",                    "famille": "extra",    "kcal": 540, "p": 6.0,  "g": 50.0, "l": 34.0},
+    "pizza":              {"nom": "Pizza",                     "famille": "extra",   "kcal": 260, "p": 11.0, "g": 30.0, "l": 10.0},
+    "kebab_burger":       {"nom": "Burger ou kebab moyen",    "famille": "extra",    "par": "piece", "kcal": 800, "p": 35.0, "g": 70.0, "l": 40.0}
+  }
+}
