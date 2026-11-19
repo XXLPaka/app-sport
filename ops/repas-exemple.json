@@ -1,0 +1,17 @@
+{
+  "2026-11-02": {
+    "midi":  [["pates_crues", 150], ["boeuf_hache_15", 200], ["huile", 10], ["tomates_concassees", 200], ["emmental", 20]],
+    "soir":  [["poulet_blanc", 180], ["riz_cru", 80], ["legumes_verts", 200], ["huile", 10]],
+    "reste": [["flocons_avoine", 60], ["lait_demi_ecreme", 250], ["banane", 1], ["whey_nutrimuscle", 1]]
+  },
+  "2026-11-09": {
+    "midi":  [["riz_cru", 100], ["saumon", 150], ["legumes_verts", 150], ["huile", 10]],
+    "soir":  [["oeuf", 3], ["pain_complet", 80], ["salade", 100], ["huile", 5]],
+    "reste": [["yaourt_nature", 125], ["pomme", 1], ["amandes", 30]]
+  },
+  "2026-11-16": {
+    "midi":  [["pates_crues", 120], ["jambon_blanc", 100], ["creme_30", 50], ["emmental", 30]],
+    "soir":  [["steak", 180], ["pomme_de_terre", 300], ["huile", 15], ["legumes_verts", 150]],
+    "reste": [["flocons_avoine", 60], ["lait_entier", 250], ["whey_nutrimuscle", 1], ["biere", 1]]
+  }
+}

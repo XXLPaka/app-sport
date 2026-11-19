@@ -133,6 +133,7 @@ h1{font-family:'Anton',sans-serif; font-weight:400; font-size:28px; text-transfo
 .ckrow input{width:88px; flex:none; margin:0; text-align:center; font-weight:800;}
 .ckhist{font-size:12.5px; color:var(--muted); margin-top:8px; line-height:1.45; font-variant-numeric:tabular-nums;}
 .ckhist b{color:var(--ink);}
+#mealbox textarea{overflow:hidden; min-height:58px;}
 .mllab{display:block; font-size:11px; letter-spacing:1.2px; text-transform:uppercase; color:var(--muted); font-weight:800; margin-top:10px;}
 .dlbar{background:var(--pre-bg); color:var(--pre-fg); border-radius:10px; padding:11px 14px; font-size:13px; margin-bottom:14px; line-height:1.45;}
 .dlbar b{display:block; font-family:'Anton',sans-serif; font-weight:400; font-size:15px; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px;}
@@ -1184,10 +1185,13 @@ function renderCheck(){
 var ML = [["m", "ml-m"], ["s", "ml-s"], ["r", "ml-r"]];
 function mlFilled(m){ return !!(m && (m.m || m.s || m.r)); }
 function mlCount(m){ return m ? ML.filter(function(f){ return m[f[0]]; }).length : 0; }
+// La dictée produit des textes longs : le champ grandit tout seul pour qu'il se relise.
+function grow(el){ if (el){ el.style.height = "auto"; el.style.height = Math.min(300, el.scrollHeight + 2) + "px"; } }
 function commitMeals(){
   var d = todayStr(), m = DB.meals[d] || (DB.meals[d] = {});
   ML.forEach(function(f){
-    var t = document.getElementById(f[1]).value.trim();
+    var el = document.getElementById(f[1]), t = el.value.trim();
+    grow(el);
     if (t) m[f[0]] = t; else delete m[f[0]];
   });
   m.u = Date.now(); m.q = 1;
@@ -1208,7 +1212,7 @@ function renderMeals(){
   var m = DB.meals[todayStr()] || {};
   ML.forEach(function(f){
     var el = document.getElementById(f[1]);
-    if (el) el.value = m[f[0]] || "";
+    if (el){ el.value = m[f[0]] || ""; grow(el); }
   });
   renderMealState();
 }
