@@ -101,6 +101,10 @@ async function calc(fichier) {
   console.log(`\nMOYENNE         ${String(n0(moy.kcal)).padStart(5)}  ${String(n0(moy.p)).padStart(5)}  ${String(n0(moy.g)).padStart(5)}  ${String(n0(moy.l)).padStart(4)}`);
   console.log(`Cible protéines : ${n0(pMin)} à ${n0(pMax)} g  →  ${moy.p >= pMin ? "atteinte" : "MANQUE " + n0(pMin - moy.p) + " g/jour"}`);
   console.log(`Protéines par kg : ${n1(moy.p / cible.poids_actuel)} g/kg`);
+  const gMin = cible.poids_actuel * cible.glucides_g_par_kg[0];
+  console.log(`Cible glucides  : ${n0(gMin)} à ${n0(cible.poids_actuel * cible.glucides_g_par_kg[1])} g  →  ${moy.g >= gMin ? "atteinte" : "MANQUE " + n0(gMin - moy.g) + " g/jour"}`);
+  console.log(`Glucides par kg  : ${n1(moy.g / cible.poids_actuel)} g/kg`);
+  console.log(`Répartition      : ${n0((moy.p * 4 / moy.kcal) * 100)} % protéines · ${n0((moy.g * 4 / moy.kcal) * 100)} % glucides · ${n0((moy.l * 9 / moy.kcal) * 100)} % lipides`);
 
   // ── Entretien mesuré : le seul chiffre qui ne se devine pas ───────────────
   let poids = [];

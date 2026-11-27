@@ -5,6 +5,8 @@
     "poids_actuel": 77.2,
     "poids_vise": 82,
     "proteines_g_par_kg": [1.6, 2.0],
+    "glucides_g_par_kg": [5.0, 7.0],
+    "_note_glucides": "Fourchette pour un sportif qui s entraine presque tous les jours. Les glucides sont le carburant de l intensite : c est eux qui manquent quand le cardio lache en fin de seance.",
     "prise_kg_par_semaine": [0.25, 0.5],
     "prise_kg_par_semaine_cible": 0.35,
     "kcal_par_kg_pris": 7000,
