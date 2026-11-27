@@ -95,6 +95,10 @@
     "salade":             {"nom": "Salade verte",             "famille": "legume",   "kcal": 15,  "p": 1.2,  "g": 1.5,  "l": 0.2},
     "carotte":            {"nom": "Carotte",                  "famille": "legume",   "kcal": 35,  "p": 0.8,  "g": 7.0,  "l": 0.2},
     "champignons":        {"nom": "Champignons",              "famille": "legume",   "kcal": 25,  "p": 2.5,  "g": 2.0,  "l": 0.3},
+    "chou_fleur":         {"nom": "Chou-fleur",               "famille": "legume",   "kcal": 25,  "p": 2.0,  "g": 3.0,  "l": 0.3},
+    "courge":             {"nom": "Courge, potimarron",       "famille": "legume",   "kcal": 30,  "p": 1.0,  "g": 6.0,  "l": 0.2},
+    "farine":             {"nom": "Farine",                   "famille": "feculent", "kcal": 350, "p": 10.0, "g": 73.0, "l": 1.0},
+    "creme_brulee":       {"nom": "Crème brûlée",             "famille": "extra",    "kcal": 280, "p": 4.0,  "g": 22.0, "l": 19.0},
     "oignon":             {"nom": "Oignon",                   "famille": "legume",   "kcal": 40,  "p": 1.2,  "g": 8.0,  "l": 0.2},
 
     "banane":             {"nom": "Banane",                   "famille": "fruit",    "par": "piece", "kcal": 95, "p": 1.2, "g": 21.0, "l": 0.3},
